@@ -65,6 +65,7 @@ class OAuthWrapper {
 			return $this->client;
 		} else {
 			$this->client = new Client($this->baseUrl);
+                        $this->client->setSslVerification(false);
 
 			$privateKey = $this->privateKey;
 			$this->oauthPlugin = new OauthPlugin(array(
