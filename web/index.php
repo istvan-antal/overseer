@@ -36,10 +36,16 @@ $app->get('/', function() use($app){
 			$oauth['oauth_token'], 
 			$oauth['oauth_token_secret']
 		)->get('rest/api/2/priority')->send()->json();
+                
+                $tickets = $app['oauth']->getClient(
+			$oauth['oauth_token'], 
+			$oauth['oauth_token_secret']
+		)->get('rest/api/2/search?jql=project%20%3D%20AL%20AND%20issuetype%20%3D%20"Support%20Request"')->send()->json();
 	}
 
 	return $app['twig']->render('layout.twig', array(
 		'oauth' => $oauth,
+                'tickets' => $tickets,
 		'priorities' => $priorities,
 	));
 })->bind('home');
