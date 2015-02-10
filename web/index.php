@@ -15,7 +15,7 @@ $app['oauth'] = $app->share(function() use($app){
 	$oauth = new Atlassian\OAuthWrapper('https://jira.condenastint.com/');
 	$oauth->setPrivateKey('../overseer.pem')
           ->setConsumerKey('1234567890')
-	      ->setConsumerSecret('')
+	      ->setConsumerSecret('abcd1234567890')
 	      ->setRequestTokenUrl('plugins/servlet/oauth/request-token')
 	      ->setAuthorizationUrl('plugins/servlet/oauth/authorize?oauth_token=%s')
 	      ->setAccessTokenUrl('plugins/servlet/oauth/access-token')
