@@ -12,14 +12,7 @@ class JIRA {
     public function __construct(OAuthWrapper $oauth, array $oauthConfig) {
         $this->oauth = $oauth;
         $this->oauthConfig = $oauthConfig;
-    }
-    
-    private function api($url, $params) {
-        return $this->oauth->getClient(
-            $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
-        )->get($url.'?'.http_build_query($params))->
-                send()->json();
-    }
+    }    
     
     public function getSupportStats() {
         $result = array(
@@ -27,9 +20,7 @@ class JIRA {
             'issues' => null
         );
         
-        $tickets = $this->api('rest/api/2/search', array(
-            'jql' => 'project = AL AND issuetype = "Support Request" ORDER BY created DESC'
-        ));
+        $tickets = $this->issueSearch('project = AL AND issuetype = "Support Request" ORDER BY created DESC');
         
         $totalSupportTicketTime = 0;
         
@@ -52,6 +43,19 @@ class JIRA {
         }, $tickets['issues']);
         
         return $result;
+    }
+    
+    private function issueSearch($jql) {
+        return $this->api('rest/api/2/search', array(
+            'jql' => $jql
+        ));
+    }
+    
+    private function api($url, $params) {
+        return $this->oauth->getClient(
+            $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
+        )->get($url.'?'.http_build_query($params))->
+                send()->json();
     }
     
 }
