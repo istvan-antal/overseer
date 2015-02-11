@@ -48,7 +48,11 @@ $app->get('/', function() use($app) {
         $totalSupportTicketTime = 0;
         
         foreach ($tickets['issues'] as $issue) {
-            $totalSupportTicketTime += $issue['fields']['timespent'];
+            if ($issue['fields']['timespent'] === null) {
+                $totalSupportTicketTime += strtotime($issue['fields']['resolutiondate']) - strtotime($issue['fields']['created']);
+            } else {
+                $totalSupportTicketTime += $issue['fields']['timespent'];
+            }
         }
         
         $avgSupportTicketTimeSpent = $totalSupportTicketTime / count($tickets['issues']);

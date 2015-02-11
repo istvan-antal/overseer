@@ -38,7 +38,7 @@ class TimeHelper {
         foreach ($units as $attribute => $unit) {
             $count = $diff->$attribute;
             if (0 !== $count) {
-                return $count . ' ' . $unit.($count > 0 ? 's' : '');
+                return $count . ' ' . $unit.($count > 1 ? 's' : '');
             }
         }
 

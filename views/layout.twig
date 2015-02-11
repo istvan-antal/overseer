@@ -22,7 +22,6 @@
                 <table class="table table-striped">
                     {% for item in supportTickets %}
                         <tr>
-                            <td>{{item.id}}</td>
                             <td>{{item.summary}}</td>
                             <td>{{time_diff(item.created)}} ago</td>
                         </tr>
