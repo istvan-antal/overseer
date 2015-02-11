@@ -14,16 +14,22 @@ class JIRA {
         $this->oauthConfig = $oauthConfig;
     }
     
+    private function api($url, $params) {
+        return $this->oauth->getClient(
+            $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
+        )->get($url.'?'.http_build_query($params))->
+                send()->json();
+    }
+    
     public function getSupportStats() {
         $result = array(
             'avgResolutionTime' => 0,
             'issues' => null
         );
         
-        $tickets = $this->oauth->getClient(
-            $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
-        )->get('rest/api/2/search?jql=project%20%3D%20AL%20AND%20issuetype%20%3D%20"Support%20Request"%20ORDER%20BY%20created%20DESC')->
-                send()->json();
+        $tickets = $this->api('rest/api/2/search', array(
+            'jql' => 'project = AL AND issuetype = "Support Request" ORDER BY created DESC'
+        ));
         
         $totalSupportTicketTime = 0;
         
