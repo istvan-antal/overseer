@@ -13,22 +13,18 @@
 
             <h1>Overseer</h1>
             
-            Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
-
             {% if oauth is empty %}
-            <p><a href="{{app.url_generator.generate('connect')}}">Click here to authenticate with Jira</a></p>
-            {% endif %}
-            
-            {% if priorities is not empty %}
+                <p><a href="{{app.url_generator.generate('connect')}}">Click here to authenticate with Jira</a></p>
+            {% else %}
+                Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
                 <br />
-
-                <h3>Jira Priorities</h3>
+                <h3>Support tickets</h3>
                 <table class="table table-striped">
-                    {% for priority in priorities %}
+                    {% for item in supportTickets %}
                         <tr>
-                            <td>{{priority.id}}</td>
-                            <td>{{priority.name}}</td>
-                            <td>{{priority.description}}</td>
+                            <td>{{item.id}}</td>
+                            <td>{{item.summary}}</td>
+                            <td>{{time_diff(item.created)}} ago</td>
                         </tr>
                     {% endfor %}
                 </table>

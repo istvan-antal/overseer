@@ -37,17 +37,13 @@ $app->get('/', function() use($app) {
     $oauth = $app['session']->get('oauth');
 
     $avgSupportTicketTimeSpent = 0;
+    $supportTickets = null;
 
-    if (empty($oauth)) {
-        $priorities = null;
-    } else {
-        $priorities = $app['oauth']->getClient(
-                        $oauth['oauth_token'], $oauth['oauth_token_secret']
-                )->get('rest/api/2/priority')->send()->json();
-
+    if (!empty($oauth)) {
         $tickets = $app['oauth']->getClient(
-                        $oauth['oauth_token'], $oauth['oauth_token_secret']
-                )->get('rest/api/2/search?jql=project%20%3D%20AL%20AND%20issuetype%20%3D%20"Support%20Request"')->send()->json();
+            $oauth['oauth_token'], $oauth['oauth_token_secret']
+        )->get('rest/api/2/search?jql=project%20%3D%20AL%20AND%20issuetype%20%3D%20"Support%20Request"%20ORDER%20BY%20created%20DESC')->
+                send()->json();
         
         $totalSupportTicketTime = 0;
         
@@ -56,6 +52,14 @@ $app->get('/', function() use($app) {
         }
         
         $avgSupportTicketTimeSpent = $totalSupportTicketTime / count($tickets['issues']);
+        
+        $supportTickets = array_map(function ($item) { 
+            return array(
+                'id' => $item['key'],
+                'summary' => $item['fields']['summary'],
+                'created' => new DateTime($item['fields']['created'])
+            );
+        }, $tickets['issues']);
     }
     
     $avgSupportTicketTimeSpentTs = new DateTime();
@@ -65,7 +69,7 @@ $app->get('/', function() use($app) {
         'oauth' => $oauth,
         'avgSupportTicketTimeSpent' => $avgSupportTicketTimeSpent,
         'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs,
-        'priorities' => $priorities
+        'supportTickets' => $supportTickets
     ));
 })->bind('home');
 
