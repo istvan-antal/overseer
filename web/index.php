@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Overseer\TimeExtension;
 use Overseer\TimeHelper;
-use Overseer\DateTimeFormatter;
+use Overseer\JIRA;
 
 $app = new Silex\Application();
 $app['debug'] = true;
@@ -34,46 +34,23 @@ $app['oauth'] = $app->share(function() use($app) {
 });
 
 $app->get('/', function() use($app) {
-    $oauth = $app['session']->get('oauth');
-
-    $avgSupportTicketTimeSpent = 0;
-    $supportTickets = null;
-
-    if (!empty($oauth)) {
-        $tickets = $app['oauth']->getClient(
-            $oauth['oauth_token'], $oauth['oauth_token_secret']
-        )->get('rest/api/2/search?jql=project%20%3D%20AL%20AND%20issuetype%20%3D%20"Support%20Request"%20ORDER%20BY%20created%20DESC')->
-                send()->json();
-        
-        $totalSupportTicketTime = 0;
-        
-        foreach ($tickets['issues'] as $issue) {
-            if ($issue['fields']['timespent'] === null) {
-                $totalSupportTicketTime += strtotime($issue['fields']['resolutiondate']) - strtotime($issue['fields']['created']);
-            } else {
-                $totalSupportTicketTime += $issue['fields']['timespent'];
-            }
-        }
-        
-        $avgSupportTicketTimeSpent = $totalSupportTicketTime / count($tickets['issues']);
-        
-        $supportTickets = array_map(function ($item) { 
-            return array(
-                'id' => $item['key'],
-                'summary' => $item['fields']['summary'],
-                'created' => new DateTime($item['fields']['created'])
-            );
-        }, $tickets['issues']);
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
     }
     
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    $supportStats = $jira->getSupportStats();
+    
     $avgSupportTicketTimeSpentTs = new DateTime();
-    $avgSupportTicketTimeSpentTs->setTimestamp(time() + $avgSupportTicketTimeSpent);
+    $avgSupportTicketTimeSpentTs->setTimestamp(time() + $supportStats['avgResolutionTime']);
 
     return $app['twig']->render('layout.twig', array(
-        'oauth' => $oauth,
-        'avgSupportTicketTimeSpent' => $avgSupportTicketTimeSpent,
+        'oauth' => $oauthConfig,
+        'avgSupportTicketTimeSpent' => $supportStats['avgResolutionTime'],
         'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs,
-        'supportTickets' => $supportTickets
+        'supportTickets' => $supportStats['issues']
     ));
 })->bind('home');
 
