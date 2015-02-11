@@ -2,10 +2,9 @@
 
 namespace Overseer;
 
-use Symfony\Component\Templating\Helper\Helper;
 use DateTime;
 
-class TimeHelper extends Helper {
+class TimeHelper {
 
     protected $formatter;
 
