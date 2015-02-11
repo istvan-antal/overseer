@@ -1,3 +1,4 @@
 /vendor
 /overseer.pem
 /nbproject
+*.pyc
