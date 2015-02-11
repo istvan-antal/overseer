@@ -12,8 +12,27 @@ class JIRA {
     public function __construct(OAuthWrapper $oauth, array $oauthConfig) {
         $this->oauth = $oauth;
         $this->oauthConfig = $oauthConfig;
-    }    
+    }
     
+    public function getTodoList() {
+        $data = $this->issueSearch(
+            'status in (Open, "In Progress", Reopened, "Ticket Open") AND '
+                . 'assignee in (currentUser()) AND '
+                . 'sprint in openSprints() '
+                . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
+        );
+        
+        return array_map(function ($item) {
+            return array(
+                'id' => $item['key'],
+                'summary' => $item['fields']['summary'],
+                'status' => $item['fields']['status']['name'],
+                'created' => new \DateTime($item['fields']['created'])
+            );
+        }, $data['issues']);
+    }
+
+
     public function getSupportStats() {
         $result = array(
             'avgResolutionTime' => 0,

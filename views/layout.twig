@@ -10,23 +10,34 @@
     </head>
     <body>
         <div class="container">
-
-            <h1>Overseer</h1>
-            
-            {% if oauth is empty %}
-                <p><a href="{{app.url_generator.generate('connect')}}">Click here to authenticate with Jira</a></p>
-            {% else %}
-                Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
-                <br />
-                <h3>Support tickets</h3>
-                <table class="table table-striped">
-                    {% for item in supportTickets %}
-                        <tr>
-                            <td>{{item.summary}}</td>
-                            <td>{{time_diff(item.created)}} ago</td>
-                        </tr>
-                    {% endfor %}
-                </table>
+            {% if issuesTodo is not empty %}
+            <h2>ToDo list</h2>
+            <table class="table table-striped">
+                {% for item in issuesTodo %}
+                    <tr>
+                        <td>
+                            {% if item.status != 'Open' %}
+                                {{item.status}}
+                            {% endif %}
+                            <a href="https://jira.condenastint.com/browse/{{item.id}}" target="_blank">
+                                {{item.summary}}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
             {% endif %}
+            
+            Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
+            <br />
+            <h3>Support tickets</h3>
+            <table class="table table-striped">
+                {% for item in supportTickets %}
+                    <tr>
+                        <td>{{item.summary}}</td>
+                        <td>{{time_diff(item.created)}} ago</td>
+                    </tr>
+                {% endfor %}
+            </table>
     </body>
 </html>

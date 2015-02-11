@@ -50,7 +50,8 @@ $app->get('/', function() use($app) {
         'oauth' => $oauthConfig,
         'avgSupportTicketTimeSpent' => $supportStats['avgResolutionTime'],
         'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs,
-        'supportTickets' => $supportStats['issues']
+        'supportTickets' => $supportStats['issues'],
+        'issuesTodo' => $jira->getTodoList()
     ));
 })->bind('home');
 
