@@ -57,7 +57,7 @@ $app->get('/', function() use($app) {
     ));
 })->bind('home');
 
-$app->get('/create', function() use ($app) {
+$app->get('/report', function() use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     
     if (empty($oauthConfig)) {
