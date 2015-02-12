@@ -40,6 +40,14 @@ class JIRA {
         
         return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
     }
+    
+    public function getIssuesResolvedToday() {
+        $data = $this->issueSearch(
+            'project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
+        );
+        
+        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
+    }
 
     public static function mapIssueFields($item) {
         return array(

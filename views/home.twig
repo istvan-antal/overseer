@@ -1,0 +1,10 @@
+{% extends 'base.twig' %}
+
+{% block body -%}
+    {% if issuesTodo is not empty %}
+    <div class="ui two column grid">
+        {% include 'issueListCard.twig' with { 'issues': issuesTodo, 'title': 'Todo' } %}
+        {% include 'issueListCard.twig' with { 'issues': issuesResolvedToday, 'title': 'Resolved today' } %}
+    </div>
+    {% endif %}
+{% endblock %}

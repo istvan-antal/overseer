@@ -1,0 +1,12 @@
+<div class="column">
+    <div class="ui fluid card">
+        <div class="content">
+            <div class="header">{{ title }}</div>
+            <div class="ui divided list">
+                {% for item in issues %}
+                    {% include 'issue.twig' with { 'item': item } %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

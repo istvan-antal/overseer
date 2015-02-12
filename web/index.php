@@ -43,17 +43,11 @@ $app->get('/', function() use($app) {
     }
     
     $jira = new JIRA($app['oauth'], $oauthConfig);
-    $supportStats = $jira->getSupportStats();
-    
-    $avgSupportTicketTimeSpentTs = new DateTime();
-    $avgSupportTicketTimeSpentTs->setTimestamp(time() + $supportStats['avgResolutionTime']);
 
-    return $app['twig']->render('layout.twig', array(
+    return $app['twig']->render('home.twig', array(
         'oauth' => $oauthConfig,
-        'avgSupportTicketTimeSpent' => $supportStats['avgResolutionTime'],
-        'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs,
-        'supportTickets' => $supportStats['issues'],
-        'issuesTodo' => $jira->getTodoList()
+        'issuesTodo' => $jira->getTodoList(),
+        'issuesResolvedToday' => $jira->getIssuesResolvedToday()
     ));
 })->bind('home');
 
