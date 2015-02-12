@@ -24,5 +24,12 @@
         <div class="main container">
         {% block body %}{% endblock %}
     </div>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/semantic-ui/dist/semantic.min.js"></script>
+    <script>
+        $(function () {
+            $('.ui.checkbox').checkbox();
+        });
+    </script>
 </body>
 </html>

@@ -24,7 +24,8 @@ class JIRA {
                 'project' => array( 'key' => 'AL' ),
                 'summary' => $fields['summary'],
                 'description' => $fields['description'],
-                'issuetype' => array( 'name' => $fields['type'] )
+                'issuetype' => array( 'name' => $fields['type'] ),
+                'priority' => array( 'name' => $fields['priority'] )
             )
         )))->send()->json();
     }

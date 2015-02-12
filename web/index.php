@@ -74,6 +74,7 @@ $app->post('/create', function (Request $request) use ($app) {
     $jira = new JIRA($app['oauth'], $app['session']->get('oauth'));
     $jira->createIssue(array(
         'type' => 'Support Request',
+        'priority' => ($request->get('is_blocker') ? 'P1' : 'P2'),
         'summary' => $request->get('summary'),
         'description' => $request->get('description')
     ));
