@@ -61,6 +61,7 @@ $app->get('/report', function() use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     
     if (empty($oauthConfig)) {
+        $app['session']->set('redirectTo', '/report');
         return $app->redirect('/connect');
     }
     
@@ -79,7 +80,7 @@ $app->post('/create', function (Request $request) use ($app) {
     return $app->redirect('/connect');
 })->bind('do_create');
 
-$app->get('/connect', function() use($app) {
+$app->get('/connect', function () use ($app) {
     $token = $app['oauth']->requestTempCredentials();
 
     $app['session']->set('oauth', $token);
@@ -103,10 +104,15 @@ $app->get('/callback', function() use($app) {
     );
 
     $app['session']->set('oauth', $token);
+    
+    $redirectUrl = $app['session']->get('redirectTo');
 
-    return $app->redirect(
-                    $app['url_generator']->generate('home')
-    );
+    if ($redirectUrl) {
+        $app['session']->set('redirectTo', null);
+        return $app->redirect($redirectUrl);
+    }
+    
+    return $app->redirect($app['url_generator']->generate('home'));
 })->bind('callback');
 
 $app->get('/reset', function() use($app) {
