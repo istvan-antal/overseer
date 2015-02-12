@@ -23,6 +23,8 @@
                 <i class="green checkmark icon"></i>
             {% elseif item.status == 'Closed' %}
                 <i class="green checkmark icon"></i>
+            {% elseif item.status == 'In Progress' %}
+                <i class="orange crosshairs icon"></i>
             {% else %}
             <span class="ui mini orange label">{{item.status}}</span>
             {% endif %}
