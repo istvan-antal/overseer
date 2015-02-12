@@ -13,6 +13,8 @@ instance.provision()
 instance.setup_generic_php()
 instance.install_node()
 instance.install_bower()
+instance.install_redis()
+instance.use_redis_php_sessions();
 
 instance.clone_project('git@github.com:conde-nast-international/overseer')
 
