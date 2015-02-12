@@ -6,6 +6,8 @@ use Overseer\TimeExtension;
 use Overseer\TimeHelper;
 use Overseer\JIRA;
 
+use Symfony\Component\HttpFoundation\Request;
+
 $app = new Silex\Application();
 $app['debug'] = true;
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -54,6 +56,22 @@ $app->get('/', function() use($app) {
         'issuesTodo' => $jira->getTodoList()
     ));
 })->bind('home');
+
+$app->get('/create', function() use ($app) {
+    return $app['twig']->render('create.twig', array(
+        'oauth' => $app['session']->get('oauth')
+    ));
+})->bind('create');
+
+$app->post('/create', function (Request $request) use ($app) {
+    $jira = new JIRA($app['oauth'], $app['session']->get('oauth'));
+    $jira->createIssue(array(
+        'type' => 'Support Request',
+        'summary' => $request->get('summary'),
+        'description' => $request->get('description')
+    ));
+    return $app->redirect('/connect');
+})->bind('do_create');
 
 $app->get('/connect', function() use($app) {
     $token = $app['oauth']->requestTempCredentials();

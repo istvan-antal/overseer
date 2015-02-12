@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Overseer</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet">
+        <style>
+            .main.container {
+                width: 850px;
+                background-color: #FFFFFF;
+                margin: 0em auto;
+                box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
+                border-left: 1px solid #DDDDDD;
+                border-right: 1px solid #DDDDDD;
+                border-bottom: 1px solid #DDDDDD;
+                padding: 2em 2em 7em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main container">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>

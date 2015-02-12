@@ -14,6 +14,21 @@ class JIRA {
         $this->oauthConfig = $oauthConfig;
     }
     
+    public function createIssue($fields) {
+        return $this->oauth->getClient(
+            $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
+        )->post('rest/api/2/issue', array(
+            'Content-Type' => 'application/json'
+        ), json_encode(array(
+            'fields' => array(
+                'project' => array( 'key' => 'AL' ),
+                'summary' => $fields['summary'],
+                'description' => $fields['description'],
+                'issuetype' => array( 'name' => $fields['type'] )
+            )
+        )))->send()->json();
+    }
+
     public function getTodoList() {
         $data = $this->issueSearch(
             'status in (Open, "In Progress", Reopened, "Ticket Open") AND '
@@ -22,17 +37,18 @@ class JIRA {
                 . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
         );
         
-        return array_map(function ($item) {
-            return array(
-                'id' => $item['key'],
-                'type' => $item['fields']['issuetype']['name'],
-                'summary' => $item['fields']['summary'],
-                'status' => $item['fields']['status']['name'],
-                'created' => new \DateTime($item['fields']['created'])
-            );
-        }, $data['issues']);
+        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
     }
 
+    public static function mapIssueFields($item) {
+        return array(
+            'id' => $item['key'],
+            'type' => $item['fields']['issuetype']['name'],
+            'summary' => $item['fields']['summary'],
+            'status' => $item['fields']['status']['name'],
+            'created' => new \DateTime($item['fields']['created'])
+        );
+    }
 
     public function getSupportStats() {
         $result = array(
@@ -54,13 +70,7 @@ class JIRA {
         
         $result['avgResolutionTime'] = $totalSupportTicketTime / count($tickets['issues']);
         
-        $result['issues'] = array_map(function ($item) { 
-            return array(
-                'id' => $item['key'],
-                'summary' => $item['fields']['summary'],
-                'created' => new \DateTime($item['fields']['created'])
-            );
-        }, $tickets['issues']);
+        $result['issues'] = array_map('Overseer\JIRA::mapIssueFields', $tickets['issues']);
         
         return $result;
     }

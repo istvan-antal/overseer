@@ -1,68 +1,25 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Overseer</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-        <link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet">
-        <style>
-            .main.container {
-                width: 850px;
-                background-color: #FFFFFF;
-                margin: 0em auto;
-                box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
-                border-left: 1px solid #DDDDDD;
-                border-right: 1px solid #DDDDDD;
-                border-bottom: 1px solid #DDDDDD;
-                padding: 2em 2em 7em;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="main container">
-            {% if issuesTodo is not empty %}
-            <h2>ToDo list</h2>
-            <div class="ui divided list">
-                {% for item in issuesTodo %}
-                    <div class="item">
-                        {% if item.type == 'Bug' %}
-                            <i class="bug icon"></i>
-                        {% elseif item.type == 'Story' %}
-                            <i class="idea icon"></i>
-                        {% elseif item.type == 'Sub-task' %}
-                            <i class="cubes icon"></i>
-                        {% elseif item.type == 'Task' %}
-                            <i class="cube icon"></i>
-                        {% elseif item.type == 'Improvement' %}
-                            <i class="lightning icon"></i>
-                        {% else %}
-                            <span class="ui label">{{item.type}}</span>
-                        {% endif %}
-                        <div class="content">
-                            <a href="https://jira.condenastint.com/browse/{{item.id}}" target="_blank">
-                                {{item.summary}}
-                            </a>
-                            {% if item.status != 'Open' %}
-                                <span class="ui mini orange label">{{item.status}}</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            
-            Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
-            <br />
-            <h3>Support tickets</h3>
-            <table class="table table-striped">
-                {% for item in supportTickets %}
-                    <tr>
-                        <td>{{item.summary}}</td>
-                        <td>{{time_diff(item.created)}} ago</td>
-                    </tr>
-                {% endfor %}
-            </table>
-    </body>
-</html>
+{% extends 'base.twig' %}
+
+{% block body -%}
+    {% if issuesTodo is not empty %}
+    <h2>My Todo list</h2>
+    <div class="ui divided list">
+        {% for item in issuesTodo %}
+            {% include 'issue.twig' with { 'item': item } %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <a class="ui blue button" href="/create">Report an issue</a>
+    <br /><br />
+    Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
+    <br />
+    {% if supportTickets is not empty %}
+    <h2>Support tickets</h2>
+    <div class="ui divided list">
+        {% for item in supportTickets %}
+            {% include 'issue.twig' with { 'item': item } %}
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}

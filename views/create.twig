@@ -1,0 +1,16 @@
+{% extends 'base.twig' %}
+
+{% block body -%}
+    <form class="ui form" method="post" action="/create">
+        <h2 class="ui header">Report an issue</h4>
+        <div class="field">
+            <label>Summary</label>
+            <input type="text" name="summary">
+        </div>
+        <div class="field">
+            <label>Description</label>
+            <textarea name="description"></textarea>
+        </div>
+        <input class="ui blue submit button" type="submit" value="Report">
+    </form>
+{% endblock %}
