@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from blueprint import Infrastructure
+from blueprints import Infrastructure
 import argparse
 
 parser = argparse.ArgumentParser(description='Launch the application.')
