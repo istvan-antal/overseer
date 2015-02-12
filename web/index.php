@@ -58,8 +58,14 @@ $app->get('/', function() use($app) {
 })->bind('home');
 
 $app->get('/create', function() use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
     return $app['twig']->render('create.twig', array(
-        'oauth' => $app['session']->get('oauth')
+        'oauth' => $oauthConfig
     ));
 })->bind('create');
 
