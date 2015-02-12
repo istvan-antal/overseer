@@ -11,6 +11,8 @@ instance = blueprint.create_instance()
 
 instance.provision()
 instance.setup_generic_php()
+instance.install_node()
+instance.install_bower()
 
 instance.clone_project('git@github.com:conde-nast-international/overseer')
 

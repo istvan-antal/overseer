@@ -1,5 +1,5 @@
 # Setup
 
 ```bash
-make init
+make init-dev
 ```
