@@ -2,3 +2,4 @@
 /overseer.pem
 /nbproject
 *.pyc
+/web/bower_components

@@ -25,6 +25,7 @@ class JIRA {
         return array_map(function ($item) {
             return array(
                 'id' => $item['key'],
+                'type' => $item['fields']['issuetype']['name'],
                 'summary' => $item['fields']['summary'],
                 'status' => $item['fields']['status']['name'],
                 'created' => new \DateTime($item['fields']['created'])

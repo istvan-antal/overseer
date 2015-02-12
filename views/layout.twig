@@ -6,26 +6,51 @@
         <title>Overseer</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet">
+        <style>
+            .main.container {
+                width: 850px;
+                background-color: #FFFFFF;
+                margin: 0em auto;
+                box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
+                border-left: 1px solid #DDDDDD;
+                border-right: 1px solid #DDDDDD;
+                border-bottom: 1px solid #DDDDDD;
+                padding: 2em 2em 7em;
+            }
+        </style>
     </head>
     <body>
-        <div class="container">
+        <div class="main container">
             {% if issuesTodo is not empty %}
             <h2>ToDo list</h2>
-            <table class="table table-striped">
+            <div class="ui divided list">
                 {% for item in issuesTodo %}
-                    <tr>
-                        <td>
-                            {% if item.status != 'Open' %}
-                                {{item.status}}
-                            {% endif %}
+                    <div class="item">
+                        {% if item.type == 'Bug' %}
+                            <i class="bug icon"></i>
+                        {% elseif item.type == 'Story' %}
+                            <i class="idea icon"></i>
+                        {% elseif item.type == 'Sub-task' %}
+                            <i class="cubes icon"></i>
+                        {% elseif item.type == 'Task' %}
+                            <i class="cube icon"></i>
+                        {% elseif item.type == 'Improvement' %}
+                            <i class="lightning icon"></i>
+                        {% else %}
+                            <span class="ui label">{{item.type}}</span>
+                        {% endif %}
+                        <div class="content">
                             <a href="https://jira.condenastint.com/browse/{{item.id}}" target="_blank">
                                 {{item.summary}}
                             </a>
-                        </td>
-                    </tr>
+                            {% if item.status != 'Open' %}
+                                <span class="ui mini orange label">{{item.status}}</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 {% endfor %}
-            </table>
+            </div>
             {% endif %}
             
             Average support ticket resolution time: {{ time_diff(avgSupportTicketTimeSpentTs) }}
