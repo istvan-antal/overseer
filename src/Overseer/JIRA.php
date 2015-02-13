@@ -29,42 +29,49 @@ class JIRA {
             )
         )))->send()->json();
     }
+    
+    public function getMyIssuesForSprint() {
+        return $this->getIssuesByJql(
+            'assignee in (currentUser()) AND '
+                . 'sprint in openSprints() '
+            . 'ORDER BY '
+                . 'priority DESC, '
+                . 'status DESC, '
+                . 'originalEstimate DESC, type DESC'
+        );
+    }
 
     public function getTodoList() {
-        $data = $this->issueSearch(
+        return $this->getIssuesByJql(
             'status in (Open, "In Progress", Reopened, "Ticket Open") AND '
                 . 'assignee in (currentUser()) AND '
                 . 'sprint in openSprints() '
                 . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
         );
-        
-        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
     }
     
     public function getIssuesResolvedToday() {
-        $data = $this->issueSearch(
+        return $this->getIssuesByJql(
             'project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
         );
-        
-        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
     }
     
     public function getIssuesResolvedYesterday() {
-        $data = $this->issueSearch(
+        return $this->getIssuesByJql(
             'project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
         );
-        
-        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
     }
     
     public function getUnresolvedSupportTickets() {
-        $data = $this->issueSearch(
+        return $this->getIssuesByJql(
             'project = AL AND '
                 . 'issuetype = "Support Request" '
                 . 'AND status in (Open, "In Progress", Reopened, "Requires clarification")'
         );
-        
-        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
+    }
+    
+    public function getIssuesByJql($jql) {
+        return array_map('Overseer\JIRA::mapIssueFields', $this->issueSearch($jql)['issues']);
     }
 
     public static function mapIssueFields($item) {

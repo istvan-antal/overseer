@@ -31,11 +31,11 @@ $app['oauth'] = $app->share(function() use($app) {
             ->setCallbackUrl(
                     $app['url_generator']->generate('callback', array(), true)
     );
-    ;
+    
     return $oauth;
 });
 
-$app->get('/', function() use($app) {
+$app->get('/', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     
     if (empty($oauthConfig)) {
@@ -44,13 +44,20 @@ $app->get('/', function() use($app) {
     
     $jira = new JIRA($app['oauth'], $oauthConfig);
     
+    $mySprintIssues = $jira->getMyIssuesForSprint();
+    
+    $mySprintIssuesSolvedCount = count(array_filter($mySprintIssues, function ($issue) {
+        return in_array($issue['status'], array('Resolved', 'Closed'));
+    }));
+    
+    $mySprintIssuesCount = count($mySprintIssues);
+    
     $cards = array();
     
     $cards []= array(
         'title' => 'Support tickets',
         'issues' => $jira->getUnresolvedSupportTickets(),
     );
-    
     $cards []= array(
         'title' => 'Todo',
         'issues' => $jira->getTodoList(),
@@ -66,7 +73,9 @@ $app->get('/', function() use($app) {
 
     return $app['twig']->render('home.twig', array(
         'oauth' => $oauthConfig,
-        'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
+        'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
+        'mySprintIssuesSolvedCount' => $mySprintIssuesSolvedCount,
+        'mySprintIssuesCount' => $mySprintIssuesCount
     ));
 })->bind('home');
 

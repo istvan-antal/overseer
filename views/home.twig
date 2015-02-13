@@ -6,4 +6,16 @@
             {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title } %}
         {% endfor %}
     </div>
+    {% if mySprintIssuesCount %}
+        <div class="ui grid">
+            <div style="margin: 0 1em; padding-top: 50px;">
+                <div data-value="{{ mySprintIssuesSolvedCount }}" data-total="{{ mySprintIssuesCount }}" class="ui indicating progress">
+                    <div class="bar">
+                        <div class="progress"></div>
+                    </div>
+                    <div class="label">Sprint progress</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
