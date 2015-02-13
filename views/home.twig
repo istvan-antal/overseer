@@ -1,10 +1,9 @@
 {% extends 'base.twig' %}
 
 {% block body -%}
-    {% if issuesTodo is not empty %}
-    <div class="ui two column grid">
-        {% include 'issueListCard.twig' with { 'issues': issuesTodo, 'title': 'Todo' } %}
-        {% include 'issueListCard.twig' with { 'issues': issuesResolvedToday, 'title': 'Resolved today' } %}
+    <div class="ui {% if cards | length >= 3 %}three{% else %}two{% endif %} column grid">
+        {% for card in cards %}
+            {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title } %}
+        {% endfor %}
     </div>
-    {% endif %}
 {% endblock %}

@@ -43,11 +43,30 @@ $app->get('/', function() use($app) {
     }
     
     $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $cards = array();
+    
+    $cards []= array(
+        'title' => 'Support tickets',
+        'issues' => $jira->getUnresolvedSupportTickets(),
+    );
+    
+    $cards []= array(
+        'title' => 'Todo',
+        'issues' => $jira->getTodoList(),
+    );
+    $cards []= array(
+        'title' => 'Resolved today',
+        'issues' => $jira->getIssuesResolvedToday(),
+    );
+    $cards []= array(
+        'title' => 'Resolved yesterday',
+        'issues' => $jira->getIssuesResolvedYesterday(),
+    );
 
     return $app['twig']->render('home.twig', array(
         'oauth' => $oauthConfig,
-        'issuesTodo' => $jira->getTodoList(),
-        'issuesResolvedToday' => $jira->getIssuesResolvedToday()
+        'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
 })->bind('home');
 

@@ -48,6 +48,24 @@ class JIRA {
         
         return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
     }
+    
+    public function getIssuesResolvedYesterday() {
+        $data = $this->issueSearch(
+            'project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
+        );
+        
+        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
+    }
+    
+    public function getUnresolvedSupportTickets() {
+        $data = $this->issueSearch(
+            'project = AL AND '
+                . 'issuetype = "Support Request" '
+                . 'AND status in (Open, "In Progress", Reopened, "Requires clarification")'
+        );
+        
+        return array_map('Overseer\JIRA::mapIssueFields', $data['issues']);
+    }
 
     public static function mapIssueFields($item) {
         return array(
