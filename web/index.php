@@ -55,8 +55,8 @@ $app->get('/', function () use ($app) {
     $cards = array();
     
     $cards []= array(
-        'title' => 'Support tickets',
-        'issues' => $jira->getUnresolvedSupportTickets(),
+        'title' => 'New support tickets',
+        'issues' => $jira->getIncomingSupportTickets(),
     );
     $cards []= array(
         'title' => 'My Todo',
@@ -99,8 +99,8 @@ $app->get('/team', function () use ($app) {
     $cards = array();
     
     $cards []= array(
-        'title' => 'Support tickets',
-        'issues' => $jira->getUnresolvedSupportTickets(),
+        'title' => 'New support tickets',
+        'issues' => $jira->getIncomingSupportTickets(),
     );
     $cards []= array(
         'title' => 'Ready for review',

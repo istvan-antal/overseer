@@ -82,6 +82,15 @@ class JIRA {
         );
     }
     
+    public function getIncomingSupportTickets() {
+        return $this->getIssuesByJql(
+            'project = AL AND '
+                . 'assignee in (EMPTY) AND '
+                . 'issuetype = "Support Request" '
+                . 'AND status in (Open, Reopened)'
+        );
+    }
+    
     public function getUnresolvedSupportTickets() {
         return $this->getIssuesByJql(
             'project = AL AND '
