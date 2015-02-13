@@ -59,7 +59,7 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getUnresolvedSupportTickets(),
     );
     $cards []= array(
-        'title' => 'Todo',
+        'title' => 'My Todo',
         'issues' => $jira->getTodoList(),
     );
     $cards []= array(
