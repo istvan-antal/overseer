@@ -32,8 +32,9 @@ class JIRA {
     
     public function getTestingIssuesForSprint() {
         return $this->getIssuesByJql(
-            'status in ("Resolved", "Done") '
-                . 'AND sprint in openSprints() '
+            'status in ("Resolved", "Done") AND '
+                . 'project = AL AND '
+                . 'sprint in openSprints() '
                 . 'ORDER BY priority DESC, '
                 . 'status DESC, originalEstimate DESC, type DESC'
         );
