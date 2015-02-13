@@ -103,6 +103,10 @@ $app->get('/team', function () use ($app) {
         'issues' => $jira->getUnresolvedSupportTickets(),
     );
     $cards []= array(
+        'title' => 'Ready for testing',
+        'issues' => $jira->getTestingIssuesForSprint(),
+    );
+    $cards []= array(
         'title' => 'Resolved today',
         'issues' => $jira->getIssuesResolvedToday(),
     );
