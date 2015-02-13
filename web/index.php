@@ -79,6 +79,46 @@ $app->get('/', function () use ($app) {
     ));
 })->bind('home');
 
+$app->get('/team', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $sprintIssues = $jira->getIssuesForSprint();
+    
+    $sprintIssuesSolvedCount = count(array_filter($sprintIssues, function ($issue) {
+        return in_array($issue['status'], array('Resolved', 'Closed'));
+    }));
+    
+    $sprintIssuesCount = count($sprintIssues);
+    
+    $cards = array();
+    
+    $cards []= array(
+        'title' => 'Support tickets',
+        'issues' => $jira->getUnresolvedSupportTickets(),
+    );
+    $cards []= array(
+        'title' => 'Resolved today',
+        'issues' => $jira->getIssuesResolvedToday(),
+    );
+    $cards []= array(
+        'title' => 'Resolved yesterday',
+        'issues' => $jira->getIssuesResolvedYesterday(),
+    );
+
+    return $app['twig']->render('team.twig', array(
+        'oauth' => $oauthConfig,
+        'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
+        'sprintIssuesSolvedCount' => $sprintIssuesSolvedCount,
+        'sprintIssuesCount' => $sprintIssuesCount
+    ));
+})->bind('team');
+
 $app->get('/report', function() use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     

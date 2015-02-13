@@ -30,6 +30,16 @@ class JIRA {
         )))->send()->json();
     }
     
+    public function getIssuesForSprint() {
+        return $this->getIssuesByJql(
+            'sprint in openSprints() '
+            . 'ORDER BY '
+                . 'priority DESC, '
+                . 'status DESC, '
+                . 'originalEstimate DESC, type DESC'
+        );
+    }
+    
     public function getMyIssuesForSprint() {
         return $this->getIssuesByJql(
             'assignee in (currentUser()) AND '
@@ -111,7 +121,8 @@ class JIRA {
     
     private function issueSearch($jql) {
         return $this->api('rest/api/2/search', array(
-            'jql' => $jql
+            'jql' => $jql,
+            'maxResults' => 1000
         ));
     }
     
