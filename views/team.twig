@@ -18,4 +18,19 @@
             </div>
         </div>
     {% endif %}
+    
+    <div style="margin: 0 1em; padding-top: 50px;">
+        <div class="ui statistics">
+            <div class="statistic">
+                <div class="value">
+                    <i class="time icon"></i>
+                    {{ time_diff(avgSupportTicketTimeSpentTs) | replace( { ' hours': 'h', ' hour': 'h' } ) }}
+                </div>
+                <div class="label">
+                    Average support ticket resolution time
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

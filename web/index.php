@@ -114,12 +114,18 @@ $app->get('/team', function () use ($app) {
         'title' => 'Resolved yesterday',
         'issues' => $jira->getIssuesResolvedYesterday(),
     );
+    
+    $supportStats = $jira->getSupportStats();
+    
+    $avgSupportTicketTimeSpentTs = new DateTime();
+    $avgSupportTicketTimeSpentTs->setTimestamp(time() + $supportStats['avgResolutionTime']);
 
     return $app['twig']->render('team.twig', array(
         'oauth' => $oauthConfig,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
         'sprintIssuesSolvedCount' => $sprintIssuesSolvedCount,
-        'sprintIssuesCount' => $sprintIssuesCount
+        'sprintIssuesCount' => $sprintIssuesCount,
+        'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs
     ));
 })->bind('team');
 
