@@ -9,14 +9,27 @@
         <link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet">
         <style>
             .main.container {
-                padding: 2em 2em 2em 2em;
+                padding: 0 2em 2em 2em;
             }
         </style>
     </head>
     <body>
         <div class="main container">
-        {% block body %}{% endblock %}
-    </div>
+            <div class="ui inverted menu">
+                <a href="/" class="active item">
+                    <i class="home icon"></i> Home
+                </a>
+                <a href="/team" class="item">
+                    <i class="users icon"></i> Team
+                </a>
+                <a href="/report" class="item">
+                    <i class="bug icon"></i> Report
+                </a>
+            </div>
+            <div style="margin-top: 30px;">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/semantic-ui/dist/semantic.min.js"></script>
     <script>
