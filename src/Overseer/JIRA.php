@@ -42,7 +42,7 @@ class JIRA {
     
     public function getIssuesForSprint() {
         return $this->getIssuesByJql(
-            'sprint in openSprints() '
+            'project = AL AND sprint in openSprints() '
             . 'ORDER BY '
                 . 'priority DESC, '
                 . 'status DESC, '
@@ -109,6 +109,7 @@ class JIRA {
             'type' => $item['fields']['issuetype']['name'],
             'summary' => $item['fields']['summary'],
             'status' => $item['fields']['status']['name'],
+            'assignee' => $item['fields']['assignee'],
             'created' => new \DateTime($item['fields']['created'])
         );
     }

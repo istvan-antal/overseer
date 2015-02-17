@@ -98,7 +98,7 @@ $app->get('/team', function () use ($app) {
     
     $cards = array();
     
-    $cards []= array(
+    /*$cards []= array(
         'title' => 'New support tickets',
         'issues' => $jira->getIncomingSupportTickets(),
     );
@@ -113,19 +113,49 @@ $app->get('/team', function () use ($app) {
     $cards []= array(
         'title' => 'Resolved yesterday',
         'issues' => $jira->getIssuesResolvedYesterday(),
-    );
+    );*/
     
     $supportStats = $jira->getSupportStats();
     
     $avgSupportTicketTimeSpentTs = new DateTime();
     $avgSupportTicketTimeSpentTs->setTimestamp(time() + $supportStats['avgResolutionTime']);
+    
+    $assignees = array();
+      
+    foreach ($sprintIssues as $issue) {
+        if (isset($issue['assignee']['name']) && !in_array($issue['assignee']['name'], $assignees)) {
+            $assignees[]=$issue['assignee']['name'];
+        }
+    }
+    
+    $issuesByAssignee = array_map(function ($assignee) use ($sprintIssues) {
+        return array(
+            'assignee' => $assignee,
+            'issues' => array_filter($sprintIssues, function ($issue) use ($assignee) {
+                return isset($issue['assignee']['name']) && $issue['assignee']['name'] === $assignee;
+             })
+        );
+    }, $assignees);
+    
+    
+    $issuesUnassigned = array_filter($sprintIssues, function ($issue) {
+        return !isset($issue['assignee']['name']);
+    });
+    
+    if (count($issuesUnassigned)) {
+        $issuesByAssignee[]= array(
+            'assignee' => 'unassigned',
+            'issues' => $issuesUnassigned
+        );
+    }
 
     return $app['twig']->render('team.twig', array(
         'oauth' => $oauthConfig,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
         'sprintIssuesSolvedCount' => $sprintIssuesSolvedCount,
         'sprintIssuesCount' => $sprintIssuesCount,
-        'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs
+        'avgSupportTicketTimeSpentTs' => $avgSupportTicketTimeSpentTs,
+        'issuesByAssignee' => $issuesByAssignee
     ));
 })->bind('team');
 

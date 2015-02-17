@@ -1,9 +1,12 @@
 {% extends 'base.twig' %}
 
 {% block body -%}
-    <div class="ui {% if cards | length >= 3 %}three{% else %}two{% endif %} column grid">
+    <div class="ui {% if cards | length + issuesByAssignee | length >= 3 %}three{% else %}two{% endif %} column grid">
         {% for card in cards %}
             {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title } %}
+        {% endfor %}
+        {% for item in issuesByAssignee %}
+            {% include 'issueListCard.twig' with { 'issues': item.issues, 'title': item.assignee } %}
         {% endfor %}
     </div>
     {% if sprintIssuesCount %}
