@@ -34,6 +34,7 @@ class JIRA {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '
                 . 'project = AL AND '
+                . 'issuetype != "Support Request" AND '
                 . 'sprint in openSprints() '
                 . 'ORDER BY priority DESC, '
                 . 'status DESC, originalEstimate DESC, type DESC'
