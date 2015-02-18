@@ -1,15 +1,13 @@
-<div class="column">
-    <div class="ui fluid card">
-        <div class="content">
-            <div class="header">{{ title }}</div>
-            <div class="ui divided list">
-                {% for item in issues %}
-                    {% include 'issue.twig' with { 'item': item } %}
-                {% endfor %}
-            </div>
+<div class="ui card">
+    <div class="content">
+        <div class="header">{{ title }}</div>
+        <div class="ui divided list">
+            {% for item in issues %}
+                {% include 'issue.twig' with { 'item': item } %}
+            {% endfor %}
         </div>
-        <div class="extra content">
-            {{ issues | length }} items
-        </div>
+    </div>
+    <div class="extra content">
+        {{ issues | length }} items
     </div>
 </div>

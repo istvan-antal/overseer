@@ -1,23 +1,26 @@
 <div class="item">
-    {% if item.type == 'Bug' %}
-        <i class="bug icon"></i>
-    {% elseif item.type == 'Story' %}
-        <i class="idea icon"></i>
-    {% elseif item.type == 'Sub-task' %}
-        <i class="cubes icon"></i>
-    {% elseif item.type == 'Task' %}
-        <i class="cube icon"></i>
-    {% elseif item.type == 'Improvement' %}
-        <i class="lightning icon"></i>
-    {% elseif item.type == 'Support Request' %}
-        <i class="warning icon"></i>
-    {% else %}
-        <span class="ui label">{{item.type}}</span>
-    {% endif %}
     <div class="content">
         <a href="https://jira.condenastint.com/browse/{{item.id}}" target="_blank">
+            {% if item.type == 'Bug' %}
+                <i class="bug icon"></i>
+            {% elseif item.type == 'Story' %}
+                <i class="idea icon"></i>
+            {% elseif item.type == 'Sub-task' %}
+                <i class="cubes icon"></i>
+            {% elseif item.type == 'Technical task' %}
+                <i class="cube icon"></i>
+            {% elseif item.type == 'Task' %}
+                <i class="cube icon"></i>
+            {% elseif item.type == 'Improvement' %}
+                <i class="lightning icon"></i>
+            {% elseif item.type == 'Support Request' %}
+                <i class="warning icon"></i>
+            {% else %}
+                <span class="ui label">{{item.type}}</span>
+            {% endif %}
+
             {{item.summary}}
-            
+
             {% if item.status != 'Open' %}
                 {% if item.status == 'Resolved' %}
                     <i class="green checkmark icon"></i>
@@ -28,7 +31,7 @@
                 {% elseif item.status == 'In Progress' %}
                     <i class="orange crosshairs icon"></i>
                 {% else %}
-                <span class="ui mini orange label">{{item.status}}</span>
+                    <span class="ui mini orange label">{{item.status}}</span>
                 {% endif %}
             {% endif %}
         </a>
