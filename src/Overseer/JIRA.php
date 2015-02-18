@@ -126,7 +126,12 @@ class JIRA {
         
         foreach ($tickets['issues'] as $issue) {
             if ($issue['fields']['timespent'] === null) {
-                $totalSupportTicketTime += strtotime($issue['fields']['resolutiondate']) - strtotime($issue['fields']['created']);
+                if (isset($issue['fields']['resolutiondate']) && $issue['fields']['resolutiondate']) {
+                    $resolved = strtotime($issue['fields']['resolutiondate']);
+                } else {
+                    $resolved = time();
+                }
+                $totalSupportTicketTime += $resolved - strtotime($issue['fields']['created']);
             } else {
                 $totalSupportTicketTime += $issue['fields']['timespent'];
             }
