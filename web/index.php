@@ -122,7 +122,7 @@ $app->get('/support', function () use ($app) {
         'menu' => 'support',
         'cards' => $cards
     ));
-})->bind('testing');
+})->bind('support');
 
 $app->get('/team', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
