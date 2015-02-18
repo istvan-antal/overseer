@@ -101,6 +101,29 @@ $app->get('/testing', function () use ($app) {
         'cards' => $cards
     ));
 })->bind('testing');
+
+$app->get('/support', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $cards = array();
+    
+    $cards []= array(
+        'title' => 'Support ticket',
+        'issues' => $jira->getSupportStats()['issues'],
+    );
+    
+    return $app['twig']->render('testing.twig', array(
+        'menu' => 'support',
+        'cards' => $cards
+    ));
+})->bind('testing');
+
 $app->get('/team', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     
