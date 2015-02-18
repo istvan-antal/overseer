@@ -79,6 +79,26 @@ $app->get('/', function () use ($app) {
     ));
 })->bind('home');
 
+$app->get('/testing', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $cards = array();
+    
+    $cards []= array(
+        'title' => 'Ready for review',
+        'issues' => $jira->getTestingIssuesForSprint(),
+    );
+    
+    return $app['twig']->render('testing.twig', array(
+        'cards' => $cards
+    ));
+})->bind('testing');
 $app->get('/team', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     

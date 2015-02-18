@@ -1,0 +1,9 @@
+{% extends 'base.twig' %}
+
+{% block body -%}
+    <div class="card-holder">
+        {% for card in cards %}
+            {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title } %}
+        {% endfor %}
+    </div>
+{% endblock %}
