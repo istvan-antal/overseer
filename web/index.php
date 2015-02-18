@@ -72,6 +72,7 @@ $app->get('/', function () use ($app) {
     );
 
     return $app['twig']->render('home.twig', array(
+        'menu' => 'home',
         'oauth' => $oauthConfig,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
         'mySprintIssuesSolvedCount' => $mySprintIssuesSolvedCount,
@@ -96,6 +97,7 @@ $app->get('/testing', function () use ($app) {
     );
     
     return $app['twig']->render('testing.twig', array(
+        'menu' => 'testing',
         'cards' => $cards
     ));
 })->bind('testing');
@@ -170,6 +172,7 @@ $app->get('/team', function () use ($app) {
     }
 
     return $app['twig']->render('team.twig', array(
+        'menu' => 'team',
         'oauth' => $oauthConfig,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
         'sprintIssuesSolvedCount' => $sprintIssuesSolvedCount,
@@ -188,6 +191,7 @@ $app->get('/report', function() use ($app) {
     }
     
     return $app['twig']->render('create.twig', array(
+        'menu' => 'report',
         'oauth' => $oauthConfig
     ));
 })->bind('create');

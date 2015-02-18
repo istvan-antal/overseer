@@ -34,16 +34,16 @@
     <body>
         <div class="main container">
             <div class="ui inverted menu">
-                <a href="/" class="active item">
+                <a href="/" class="{% if menu=='home' %}active {% endif %}item">
                     <i class="home icon"></i> Home
                 </a>
-                <a href="/team" class="item">
+                <a href="/team" class="{% if menu=='team' %}active {% endif %}item">
                     <i class="users icon"></i> Team
                 </a>
-                <a href="/testing" class="item">
+                <a href="/testing" class="{% if menu=='testing' %}active {% endif %}item">
                     <i class="certificate icon"></i> Testing
                 </a>
-                <a href="/report" class="item">
+                <a href="/report" class="{% if menu=='report' %}active {% endif %}item">
                     <i class="bug icon"></i> Report
                 </a>
             </div>
