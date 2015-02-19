@@ -63,12 +63,12 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getTodoList(),
     );
     $cards []= array(
-        'title' => 'Resolved today',
-        'issues' => $jira->getIssuesResolvedToday(),
+        'title' => 'Resolved today by me',
+        'issues' => $jira->getMyIssuesResolvedToday(),
     );
     $cards []= array(
-        'title' => 'Resolved yesterday',
-        'issues' => $jira->getIssuesResolvedYesterday(),
+        'title' => 'Resolved yesterday by me',
+        'issues' => $jira->getMyIssuesResolvedYesterday(),
     );
 
     return $app['twig']->render('home.twig', array(

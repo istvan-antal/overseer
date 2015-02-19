@@ -61,6 +61,18 @@ class JIRA {
                 . 'originalEstimate DESC, type DESC'
         );
     }
+    
+    public function getMyIssuesResolvedToday() {
+        return $this->getIssuesByJql(
+            'assignee in (currentUser()) AND project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
+        );
+    }
+    
+    public function getMyIssuesResolvedYesterday() {
+        return $this->getIssuesByJql(
+            'assignee in (currentUser()) AND project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
+        );
+    }
 
     public function getTodoList() {
         return $this->getIssuesByJql(
