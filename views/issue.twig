@@ -20,7 +20,7 @@
             {% endif %}
 
             {{item.summary}}
-
+            
             {% if item.status != 'Open' %}
                 {% if item.status == 'Resolved' %}
                     <i class="green checkmark icon"></i>
@@ -33,6 +33,10 @@
                 {% else %}
                     <span class="ui mini orange label">{{item.status}}</span>
                 {% endif %}
+            {% endif %}
+            
+            {% if item.status == 'Open' and item.sprints | length > 2 %}
+                <span class="ui mini red label">{{item.sprints | length }} sprints</span>
             {% endif %}
         </a>
     </div>

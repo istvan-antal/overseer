@@ -105,12 +105,20 @@ class JIRA {
     }
 
     public static function mapIssueFields($item) {
+        if (is_null($item['fields']['customfield_10007'])) {
+            $sprints = array();
+        } else {
+            $sprints = array_map(function ($item) {
+                return explode(',', explode('name=', $item)[1])[0];
+            }, $item['fields']['customfield_10007']);
+        }
         return array(
             'id' => $item['key'],
             'type' => $item['fields']['issuetype']['name'],
             'summary' => $item['fields']['summary'],
             'status' => $item['fields']['status']['name'],
             'assignee' => $item['fields']['assignee'],
+            'sprints' => $sprints,
             'created' => new \DateTime($item['fields']['created'])
         );
     }
