@@ -51,6 +51,12 @@ class JIRA {
         );
     }
     
+    public function getIssuesWorkedOn() {
+        return $this->getIssuesByJql(
+            'project = AL AND sprint in openSprints() AND status = "In Progress"'
+        );
+    }
+    
     public function getMyIssuesForSprint() {
         return $this->getIssuesByJql(
             'assignee in (currentUser()) AND '

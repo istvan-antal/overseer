@@ -57,18 +57,29 @@ $app->get('/', function () use ($app) {
     $cards []= array(
         'title' => 'New support tickets',
         'issues' => $jira->getIncomingSupportTickets(),
+        'options' => array()
     );
     $cards []= array(
         'title' => 'My Todo',
         'issues' => $jira->getTodoList(),
+        'options' => array()
     );
     $cards []= array(
         'title' => 'Resolved today by me',
         'issues' => $jira->getMyIssuesResolvedToday(),
+        'options' => array()
     );
     $cards []= array(
         'title' => 'Resolved yesterday by me',
         'issues' => $jira->getMyIssuesResolvedYesterday(),
+        'options' => array()
+    );
+    $cards []= array(
+        'title' => 'Issues in progress',
+        'issues' => $jira->getIssuesWorkedOn(),
+        'options' => array(
+            'includeAssignee' => true
+        )
     );
 
     return $app['twig']->render('home.twig', array(

@@ -38,6 +38,12 @@
             {% if item.status == 'Open' and item.sprints | length > 2 %}
                 <span class="ui mini red label">{{item.sprints | length }} sprints</span>
             {% endif %}
+            
+            {% if options.includeAssignee is defined %}
+                <em>
+                    {{ item.assignee.displayName }}
+                </em>
+            {% endif %}
         </a>
     </div>
 </div>

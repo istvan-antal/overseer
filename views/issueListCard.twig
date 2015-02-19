@@ -3,7 +3,7 @@
         <div class="header">{{ title }}</div>
         <div class="ui divided list">
             {% for item in issues %}
-                {% include 'issue.twig' with { 'item': item } %}
+                {% include 'issue.twig' %}
             {% endfor %}
         </div>
     </div>

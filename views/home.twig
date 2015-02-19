@@ -3,7 +3,7 @@
 {% block body -%}
     <div class="card-holder">
         {% for card in cards %}
-            {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title } %}
+            {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title, 'options': card.options } %}
         {% endfor %}
         {% if mySprintIssuesCount %}
         <div class="ui card">
