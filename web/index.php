@@ -124,6 +124,45 @@ $app->get('/support', function () use ($app) {
     ));
 })->bind('support');
 
+$app->get('/components', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $cards = array();
+    
+    $components = array();
+    
+    foreach ($jira->getIssuesForSprint() as $issue) {
+        if (empty($issue['components'])) {
+            $component = '*None*';
+        } else {
+            $component = $issue['components'][0]['name'];
+        }
+        
+        if (!isset($components[$component])) {
+            $components[$component] = array();
+        }
+        $components[$component][]=$issue;
+    }
+    
+    foreach ($components as $component => $issues) {
+        $cards []= array(
+            'title' => $component,
+            'issues' => $issues,
+        );
+    }
+    
+    return $app['twig']->render('testing.twig', array(
+        'menu' => 'components',
+        'cards' => $cards
+    ));
+})->bind('components');
+
 $app->get('/team', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     

@@ -118,6 +118,7 @@ class JIRA {
             'summary' => $item['fields']['summary'],
             'status' => $item['fields']['status']['name'],
             'assignee' => $item['fields']['assignee'],
+            'components' => $item['fields']['components'],
             'sprints' => $sprints,
             'created' => new \DateTime($item['fields']['created'])
         );
