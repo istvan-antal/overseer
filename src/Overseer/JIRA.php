@@ -30,6 +30,16 @@ class JIRA {
         )))->send()->json();
     }
     
+    public function getTestingIssues() {
+        return $this->getIssuesByJql(
+            'status in ("Resolved", "Done") AND '
+                . 'project = AL AND '
+                . 'issuetype != "Support Request" '
+                . 'ORDER BY priority DESC, '
+                . 'status DESC, originalEstimate DESC, type DESC'
+        );
+    }
+    
     public function getTestingIssuesForSprint() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '
