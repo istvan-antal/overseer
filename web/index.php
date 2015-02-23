@@ -104,7 +104,7 @@ $app->get('/testing', function () use ($app) {
     
     $cards []= array(
         'title' => 'Ready for review',
-        'issues' => $jira->getTestingIssuesForSprint(),
+        'issues' => $jira->getTestingIssues(),
     );
     
     return $app['twig']->render('testing.twig', array(
