@@ -11,7 +11,7 @@
             .main.container {
                 padding: 0 2em 2em 2em;
             }
-            
+
             .card-holder {
                 /*-webkit-column-width: 350px;
                 column-width: 350px;*/
@@ -19,13 +19,27 @@
                 column-count: 3;
             }
             
+            @media only screen and (min-width: 667px) and (max-width: 900px) { 
+                .card-holder {
+                    -webkit-column-count: 2;
+                    column-count: 2;
+                }
+            }
+
+            @media only screen and (min-width: 375px) and (max-width: 667px) { 
+                .card-holder {
+                    -webkit-column-count: 1;
+                    column-count: 1;
+                }
+            }
+
             .card-holder .ui.card {
                 display: inline-block;
                 width: 99%;
                 margin: 1px;
                 margin-bottom: 15px;
             }
-            
+
             .card-holder .ui.list .item i.icon {
                 display: inline;
             }
@@ -54,9 +68,9 @@
                 </a>
             </div>
             <div style="margin-top: 15px;">
-                {% block body %}{% endblock %}
-            </div>
+            {% block body %}{% endblock %}
         </div>
+    </div>
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/semantic-ui/dist/semantic.min.js"></script>
     <script>
