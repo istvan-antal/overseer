@@ -21,7 +21,7 @@ $app['twig']->addExtension(new TimeExtension(new TimeHelper()));
 $app['session.storage.handler'] = null;
 
 $app['oauth'] = $app->share(function() use($app) {
-    $oauth = new Atlassian\OAuthWrapper('https://jira.condenastint.com/');
+    $oauth = new Overseer\OAuthWrapper('https://jira.condenastint.com/');
     $oauth->setPrivateKey('../overseer.pem')
             ->setConsumerKey('1234567890')
             ->setConsumerSecret('abcd1234567890')

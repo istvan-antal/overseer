@@ -1,5 +1,5 @@
 <?php
-namespace Atlassian;
+namespace Overseer;
 
 use Guzzle\Http\Client;
 use Guzzle\Plugin\Oauth\OauthPlugin;

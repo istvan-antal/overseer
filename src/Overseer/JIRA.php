@@ -2,8 +2,6 @@
 
 namespace Overseer;
 
-use Atlassian\OAuthWrapper;
-
 class JIRA {
     
     private $oauth;
