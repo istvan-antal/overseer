@@ -1,5 +1,5 @@
 init-dev:
-	git clone git@github.com:conde-nast-international/blueprints.git dev/blueprints
+	git clone git@github.com:istvan-antal/blueprint.git dev/blueprints
 deploy:
 	git push
-	ssh overseer 'cd /opt/cni/overseer; git pull'
+	ssh overseer 'cd /opt/apps/overseer; git pull'
