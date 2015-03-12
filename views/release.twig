@@ -1,0 +1,24 @@
+{% extends 'base.twig' %}
+
+{% block body -%}
+    <div class="card-holder">
+        {% for version in unreleasedVersions %}
+            <div class="ui card">
+                <div class="content">
+                    <div class="header">{{ version.name }}</div>
+                    <div class="ui divided list">
+                        {% for item in version.issues %}
+                            {% include 'issue.twig' %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="extra content">
+                    {{ version.issues | length }}
+                </div>
+            </div>
+        {% endfor %}
+        {% for card in cards %}
+            {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title, 'options': card.options } %}
+        {% endfor %}
+    </div>
+{% endblock %}

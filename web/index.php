@@ -45,7 +45,7 @@ $app->get('/', function () use ($app) {
     $jira = new JIRA($app['oauth'], $oauthConfig);
     
     $projects = $jira->getProjects();
-    //var_dump($projects);
+    //var_dump($projects);    
     
     $mySprintIssues = $jira->getMyIssuesForSprint();
     
@@ -93,6 +93,60 @@ $app->get('/', function () use ($app) {
         'mySprintIssuesCount' => $mySprintIssuesCount
     ));
 })->bind('home');
+
+$app->get('/release', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $versions = $jira->getVersions();
+    
+    $unreleasedVersions = array_filter($versions, function ($version) {
+        return !$version['released'];
+    });
+    
+    foreach ($unreleasedVersions as &$version) {
+        $version['issues'] = $jira->getIssuesFixedForVersion($version['name']);
+    }
+    
+    $issuesWithoutFixVersion = $jira->getIssuesWithoutFixedVersionForSprint();
+    
+    $cards = array();
+    
+    $components = array();
+    
+    foreach ($issuesWithoutFixVersion as $issue) {
+        if (empty($issue['components'])) {
+            $component = '*None*';
+        } else {
+            $component = $issue['components'][0]['name'];
+        }
+        
+        if (!isset($components[$component])) {
+            $components[$component] = array();
+        }
+        $components[$component][]=$issue;
+    }
+    
+    foreach ($components as $component => $issues) {
+        $cards []= array(
+            'title' => $component,
+            'issues' => $issues,
+            'options' => array()
+        );
+    }
+    
+    return $app['twig']->render('release.twig', array(
+        'menu' => 'home',
+        'cards' => $cards,
+        'unreleasedVersions' => $unreleasedVersions,
+        'issuesWithoutFixVersion' => $issuesWithoutFixVersion
+    ));
+})->bind('release');
 
 $app->get('/testing', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');

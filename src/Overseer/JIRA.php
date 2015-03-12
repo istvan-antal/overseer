@@ -28,6 +28,22 @@ class JIRA {
         )))->send()->json();
     }
     
+    public function getIssuesWithoutFixedVersionForSprint() {
+        return $this->getIssuesByJql(
+            'status in ("Resolved", "Done", "Closed") AND '
+            .'project = AL AND sprint in openSprints() '
+            .' AND fixVersion = EMPTY '
+            . 'ORDER BY '
+                . 'priority DESC, '
+                . 'status DESC, '
+                . 'originalEstimate DESC, type DESC'
+        );
+    }
+    
+    public function getIssuesFixedForVersion($version = 'EMPTY') {
+        return $this->getIssuesByJql("fixVersion = $version");
+    }
+    
     public function getTestingIssues() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '
@@ -178,6 +194,10 @@ class JIRA {
         $result['issues'] = array_map('Overseer\JIRA::mapIssueFields', $tickets['issues']);
         
         return $result;
+    }
+    
+    public function getVersions() {
+        return $this->api('/rest/api/2/project/AL/versions', array());
     }
     
     public function getProjects() {
