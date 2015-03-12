@@ -180,6 +180,10 @@ class JIRA {
         return $result;
     }
     
+    public function getProjects() {
+        return $this->api('/rest/api/2/project', array());
+    }
+
     private function issueSearch($jql) {
         return $this->api('rest/api/2/search', array(
             'jql' => $jql,

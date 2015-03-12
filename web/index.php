@@ -44,6 +44,9 @@ $app->get('/', function () use ($app) {
     
     $jira = new JIRA($app['oauth'], $oauthConfig);
     
+    $projects = $jira->getProjects();
+    //var_dump($projects);
+    
     $mySprintIssues = $jira->getMyIssuesForSprint();
     
     $mySprintIssuesSolvedCount = count(array_filter($mySprintIssues, function ($issue) {
