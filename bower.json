@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "semantic-ui": "~1.8.1"
+    "semantic-ui": "~1.8.1",
+    "jquery-ui": "~1.10.4"
   }
 }
