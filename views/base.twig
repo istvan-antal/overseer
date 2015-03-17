@@ -22,6 +22,13 @@
                 column-count: 3;
             }
             
+            @media only screen and (min-width: 1400px) { 
+                .card-holder {
+                    -webkit-column-count: 4;
+                    column-count: 4;
+                }
+            }
+            
             @media only screen and (min-width: 667px) and (max-width: 900px) { 
                 .card-holder {
                     -webkit-column-count: 2;
@@ -50,6 +57,7 @@
     </head>
     <body>
         <div class="main container">
+            {% block menu %}
             <div class="ui inverted menu">
                 <a href="/" class="{% if menu=='home' %}active {% endif %}item">
                     <i class="home icon"></i> Home
@@ -70,7 +78,9 @@
                     <i class="bug icon"></i> Report
                 </a>
             </div>
+            {% endblock %}
             <div style="margin-top: 15px;">
+            
             {% block body %}{% endblock %}
         </div>
     </div>

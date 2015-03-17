@@ -35,6 +35,83 @@ $app['oauth'] = $app->share(function() use($app) {
     return $oauth;
 });
 
+
+$app->get('/status', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $sprintIssues = $jira->getIssuesForSprint();
+    
+    $sprintIssuesSolvedCount = count(array_filter($sprintIssues, function ($issue) {
+        return in_array($issue['status'], array('Resolved', 'Closed'));
+    }));
+    
+    $sprintIssuesCount = count($sprintIssues);
+    
+    $cards = array();
+    
+    $cards []= array(
+        'title' => 'New support tickets',
+        'issues' => $jira->getIncomingSupportTickets(),
+        'options' => array()
+    );
+    
+    $cards []= array(
+        'title' => 'Issues in progress',
+        'issues' => $jira->getIssuesWorkedOn(),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
+    
+    $cards []= array(
+        'title' => 'Issues resolved today',
+        'issues' => $jira->getIssuesResolvedToday(),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
+    
+    $cards []= array(
+        'title' => 'Issues resolved yesterday',
+        'issues' => $jira->getIssuesResolvedYesterday(),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
+    
+    $versions = $jira->getVersions();
+    
+    $unreleasedVersions = array_filter($versions, function ($version) {
+        return !$version['released'];
+    });
+    
+    foreach ($unreleasedVersions as &$version) {
+        $version['issues'] = $jira->getIssuesFixedForVersion($version['name']);
+    }
+    
+    foreach ($unreleasedVersions as $version) {
+        $cards []= array(
+            'title' => 'Release: '.$version['name'],
+            'issues' =>$version['issues'],
+            'options' => array()
+        );
+    }
+
+    return $app['twig']->render('status.twig', array(
+        'menu' => 'home',
+        'oauth' => $oauthConfig,
+        'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
+        'sprintIssuesSolvedCount' => $sprintIssuesSolvedCount,
+        'sprintIssuesCount' => $sprintIssuesCount,
+    ));
+})->bind('status');
+
 $app->get('/', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     

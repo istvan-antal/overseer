@@ -41,7 +41,7 @@
                 <span class="ui mini red label">{{item.sprints | length }} sprints</span>
             {% endif %}
             
-            {% if options.includeAssignee is defined %}
+            {% if options.includeAssignee is defined and item.assignee %}
                 <em>
                     {{ item.assignee.displayName }}
                 </em>
