@@ -60,7 +60,11 @@ $app->get('/status', function () use ($app) {
         'issues' => $jira->getIncomingSupportTickets(),
         'options' => array()
     );
-    
+    $cards []= array(
+        'title' => 'Ready for review',
+        'issues' => $jira->getTestingIssues(),
+        'options' => array()
+    );
     $cards []= array(
         'title' => 'Issues in progress',
         'issues' => $jira->getIssuesWorkedOn(),
