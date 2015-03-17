@@ -148,6 +148,39 @@ $app->get('/release', function () use ($app) {
     ));
 })->bind('release');
 
+$app->get('/releases', function () use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+    
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+    
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    
+    $versions = $jira->getVersions();
+    
+    $unreleasedVersions = array_filter($versions, function ($version) {
+        return !$version['released'];
+    });
+    
+    $cards = array();
+    
+    foreach ($versions as &$version) {
+        $cards []= array(
+            'title' => $version['name'],
+            'issues' => $jira->getIssuesFixedForVersion($version['name']),
+            'options' => array()
+        );
+    }
+    
+    $cards = array_reverse($cards);
+    
+    return $app['twig']->render('releases.twig', array(
+        'menu' => 'home',
+        'cards' => $cards
+    ));
+})->bind('releases');
+
 $app->get('/testing', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
     
