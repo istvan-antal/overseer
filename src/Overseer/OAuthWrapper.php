@@ -65,7 +65,7 @@ class OAuthWrapper {
 			return $this->client;
 		} else {
 			$this->client = new Client($this->baseUrl);
-                        $this->client->setSslVerification( __DIR__ . '/Resources/cni.pem');
+                        $this->client->setSslVerification( __DIR__ . '/Resources/ca.pem');
 
 			$privateKey = $this->privateKey;
 			$this->oauthPlugin = new OauthPlugin(array(
