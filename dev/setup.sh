@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd /opt/cni/overseer
+cd /opt/apps/overseer
 composer install

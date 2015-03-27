@@ -1,6 +1,6 @@
 /vendor
 /overseer.pem
 /nbproject
-/dev/blueprints
+/dev/blueprint
 *.pyc
 /web/bower_components
