@@ -44,6 +44,18 @@ class JIRA {
         return $this->getIssuesByJql("fixVersion = $version");
     }
     
+    public function getMyTestingIssuesForSprint() {
+        return $this->getIssuesByJql(
+            'status in ("Resolved", "Done") AND '
+                . 'project = AL AND '
+                . 'issuetype != "Support Request" AND '
+                . 'reporter in (currentUser()) AND '
+                . 'sprint in openSprints() '
+                . 'ORDER BY priority DESC, '
+                . 'status DESC, originalEstimate DESC, type DESC'
+        );
+    }
+    
     public function getTestingIssues() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '

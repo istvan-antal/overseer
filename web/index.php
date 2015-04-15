@@ -143,6 +143,13 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getIncomingSupportTickets(),
         'options' => array()
     );
+    
+    $cards []= array(
+        'title' => 'To be reviewed',
+        'issues' => $jira->getMyTestingIssuesForSprint(),
+        'options' => array()
+    );
+    
     $cards []= array(
         'title' => 'My Todo',
         'issues' => $jira->getTodoList(),
