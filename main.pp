@@ -3,6 +3,14 @@ node default {
     $maxUploadedFileSize = $maxUploadSize
     $maxFileUploads = 50
 
+    exec { "install_composer":
+        require => Package["php5-cli"],
+        command => "/bin/bash -c 'curl -sS https://getcomposer.org/installer | php; mv composer.phar /usr/local/bin/composer'",
+        creates => "/usr/local/bin/composer",
+        logoutput => true,
+        timeout => 1800
+    }
+
     package { ["php5-fpm", "php5-cli", "php5-curl", "php5-mysql", "php5-redis"]: ensure => "installed" }
 
     service { "php5-fpm":
