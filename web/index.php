@@ -125,8 +125,7 @@ $app->get('/', function () use ($app) {
     
     $jira = new JIRA($app['oauth'], $oauthConfig);
     
-    $projects = $jira->getProjects();
-    //var_dump($projects);    
+    $projects = $jira->getProjects();  
     
     $mySprintIssues = $jira->getMyIssuesForSprint();
     
@@ -176,6 +175,7 @@ $app->get('/', function () use ($app) {
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
         'oauth' => $oauthConfig,
+        'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
         'mySprintIssuesSolvedCount' => $mySprintIssuesSolvedCount,
         'mySprintIssuesCount' => $mySprintIssuesCount
