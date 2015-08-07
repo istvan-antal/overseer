@@ -2,9 +2,6 @@ vendor: composer.json composer.lock
 	composer install
 	touch vendor
 
-composer.lock: composer.json
-	composer update
-
 init-dev:
 	git clone git@github.com:istvan-antal/blueprint.git dev/blueprint
 
