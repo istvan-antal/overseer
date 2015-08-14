@@ -1,9 +1,9 @@
 {% extends 'base.twig' %}
 
 {% block body -%}
-    {% for project in projects %}
     <div class="ui vertical buttons">
+    {% for project in projects %}
         <a class="ui button" href="/{{project.key}}/home">{{project.name}}</a>
-    </div>
     {% endfor %}
+    </div>
 {% endblock %}
