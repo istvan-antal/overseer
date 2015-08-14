@@ -175,7 +175,7 @@ class JIRA {
         }
         return array(
             'id' => $item['key'],
-            'url' => 'https://jira.condenastint.com/browse/'.$item['key'],
+            'url' => $this->baseUrl.$item['key'],
             'type' => $item['fields']['issuetype']['name'],
             'summary' => $item['fields']['summary'],
             'status' => $item['fields']['status']['name'],
