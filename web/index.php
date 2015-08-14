@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-require './config.php';
+require '../config.php';
 
 use Overseer\TimeExtension;
 use Overseer\TimeHelper;
