@@ -2,6 +2,8 @@
 
 {% block body -%}
     {% for project in projects %}
-        <a href="/{{project.key}}/home">{{project.name}}</a>
+    <div class="ui vertical buttons">
+        <a class="ui button" href="/{{project.key}}/home">{{project.name}}</a>
+    </div>
     {% endfor %}
 {% endblock %}
