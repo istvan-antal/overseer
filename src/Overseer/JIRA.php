@@ -175,7 +175,7 @@ class JIRA {
         }
         return array(
             'id' => $item['key'],
-            'url' => $this->baseUrl.'issues/'.$item['key'],
+            'url' => $this->baseUrl.'browse/'.$item['key'],
             'type' => $item['fields']['issuetype']['name'],
             'summary' => $item['fields']['summary'],
             'status' => $item['fields']['status']['name'],
