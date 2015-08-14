@@ -7,7 +7,7 @@ node default {
 
     exec { "install_bower":
         require => Package["npm"],
-        command => "npm install -g bower",
+        command => "/bin/bash -c 'npm install -g bower'",
         creates => "/usr/local/bin/bower",
         logoutput => true,
         timeout => 1800
