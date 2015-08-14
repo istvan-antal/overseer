@@ -125,7 +125,7 @@ class JIRA {
     public function getTodoList() {
         return $this->getIssuesByJql(
             'status not in (Resolved, Closed) AND '
-                . 'assignee in (currentUser()) AND '
+                . 'assignee in (currentUser()) '
                 . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
         );
     }
