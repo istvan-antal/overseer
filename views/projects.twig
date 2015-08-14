@@ -1,0 +1,7 @@
+{% extends 'base.twig' %}
+
+{% block body -%}
+    {% for project in projects %}
+        {{ project | json_encode() }}
+    {% endfor %}
+{% endblock %}

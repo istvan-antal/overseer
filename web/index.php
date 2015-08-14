@@ -134,7 +134,13 @@ $app->get('/', function () use ($app) {
 
     $projects = $jira->getProjects();
 
-    $mySprintIssues = $jira->getMyIssuesForSprint();
+    return $app['twig']->render('projects.twig', array(
+        'menu' => 'home',
+        'oauth' => $oauthConfig,
+        'projects' => $projects
+    ));
+
+    /*$mySprintIssues = $jira->getMyIssuesForSprint();
 
     $mySprintIssuesSolvedCount = count(array_filter($mySprintIssues, function ($issue) {
         return in_array($issue['status'], array('Resolved', 'Closed'));
@@ -186,7 +192,7 @@ $app->get('/', function () use ($app) {
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
         'mySprintIssuesSolvedCount' => $mySprintIssuesSolvedCount,
         'mySprintIssuesCount' => $mySprintIssuesCount
-    ));
+    ));*/
 })->bind('home');
 
 $app->get('/release', function () use ($app) {
