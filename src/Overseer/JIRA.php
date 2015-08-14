@@ -3,15 +3,21 @@
 namespace Overseer;
 
 class JIRA {
-    
+
     private $oauth;
     private $oauthConfig;
-    
+
+    private $projectKey;
+
     public function __construct(OAuthWrapper $oauth, array $oauthConfig) {
         $this->oauth = $oauth;
         $this->oauthConfig = $oauthConfig;
     }
-    
+
+    public function setProject($projectKey) {
+        $this->projectKey = $projectKey;
+    }
+
     public function createIssue($fields) {
         return $this->oauth->getClient(
             $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
@@ -27,7 +33,7 @@ class JIRA {
             )
         )))->send()->json();
     }
-    
+
     public function getIssuesWithoutFixedVersionForSprint() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done", "Closed") AND '
@@ -39,11 +45,11 @@ class JIRA {
                 . 'originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getIssuesFixedForVersion($version = 'EMPTY') {
         return $this->getIssuesByJql("fixVersion = $version");
     }
-    
+
     public function getMyTestingIssuesForSprint() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '
@@ -55,7 +61,7 @@ class JIRA {
                 . 'status DESC, originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getTestingIssues() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '
@@ -65,7 +71,7 @@ class JIRA {
                 . 'status DESC, originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getTestingIssuesForSprint() {
         return $this->getIssuesByJql(
             'status in ("Resolved", "Done") AND '
@@ -76,7 +82,7 @@ class JIRA {
                 . 'status DESC, originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getIssuesForSprint() {
         return $this->getIssuesByJql(
             'project = AL AND sprint in openSprints() '
@@ -86,13 +92,13 @@ class JIRA {
                 . 'originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getIssuesWorkedOn() {
         return $this->getIssuesByJql(
             'project = AL AND sprint in openSprints() AND status = "In Progress"'
         );
     }
-    
+
     public function getMyIssuesForSprint() {
         return $this->getIssuesByJql(
             'assignee in (currentUser()) AND '
@@ -103,13 +109,13 @@ class JIRA {
                 . 'originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getMyIssuesResolvedToday() {
         return $this->getIssuesByJql(
             'assignee in (currentUser()) AND project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
         );
     }
-    
+
     public function getMyIssuesResolvedYesterday() {
         return $this->getIssuesByJql(
             'assignee in (currentUser()) AND project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
@@ -118,25 +124,24 @@ class JIRA {
 
     public function getTodoList() {
         return $this->getIssuesByJql(
-            'status in (Open, "In Progress", Reopened, "Ticket Open") AND '
+            'status not in (Resolved, Closed) AND '
                 . 'assignee in (currentUser()) AND '
-                . 'sprint in openSprints() '
                 . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
         );
     }
-    
+
     public function getIssuesResolvedToday() {
         return $this->getIssuesByJql(
             'project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
         );
     }
-    
+
     public function getIssuesResolvedYesterday() {
         return $this->getIssuesByJql(
             'project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
         );
     }
-    
+
     public function getIncomingSupportTickets() {
         return $this->getIssuesByJql(
             'project = AL AND '
@@ -145,7 +150,7 @@ class JIRA {
                 . 'AND status in (Open, Reopened)'
         );
     }
-    
+
     public function getUnresolvedSupportTickets() {
         return $this->getIssuesByJql(
             'project = AL AND '
@@ -153,7 +158,7 @@ class JIRA {
                 . 'AND status in (Open, "In Progress", Reopened, "Requires clarification")'
         );
     }
-    
+
     public function getIssuesByJql($jql) {
         return array_map('Overseer\JIRA::mapIssueFields', $this->issueSearch($jql)['issues']);
     }
@@ -183,11 +188,11 @@ class JIRA {
             'avgResolutionTime' => 0,
             'issues' => null
         );
-        
+
         $tickets = $this->issueSearch('project = AL AND issuetype = "Support Request" ORDER BY created DESC');
-        
+
         $totalSupportTicketTime = 0;
-        
+
         foreach ($tickets['issues'] as $issue) {
             if ($issue['fields']['timespent'] === null) {
                 if (isset($issue['fields']['resolutiondate']) && $issue['fields']['resolutiondate']) {
@@ -200,18 +205,18 @@ class JIRA {
                 $totalSupportTicketTime += $issue['fields']['timespent'];
             }
         }
-        
+
         $result['avgResolutionTime'] = $totalSupportTicketTime / count($tickets['issues']);
-        
+
         $result['issues'] = array_map('Overseer\JIRA::mapIssueFields', $tickets['issues']);
-        
+
         return $result;
     }
-    
+
     public function getVersions() {
         return $this->api('/rest/api/2/project/AL/versions', array());
     }
-    
+
     public function getProjects() {
         return $this->api('/rest/api/2/project', array());
     }
@@ -222,12 +227,12 @@ class JIRA {
             'maxResults' => 1000
         ));
     }
-    
+
     private function api($url, $params) {
         return $this->oauth->getClient(
             $this->oauthConfig['oauth_token'], $this->oauthConfig['oauth_token_secret']
         )->get($url.'?'.http_build_query($params))->
                 send()->json();
     }
-    
+
 }

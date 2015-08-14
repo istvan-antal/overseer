@@ -134,10 +134,19 @@ $app->get('/', function () use ($app) {
 
     $projects = $jira->getProjects();
 
+    $cards = array();
+
+    $cards []= array(
+        'title' => 'My Todo',
+        'issues' => $jira->getTodoList(),
+        'options' => array()
+    );
+
     return $app['twig']->render('projects.twig', array(
         'menu' => 'home',
         'oauth' => $oauthConfig,
-        'projects' => $projects
+        'projects' => $projects,
+        'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
 
     /*$mySprintIssues = $jira->getMyIssuesForSprint();
@@ -162,11 +171,7 @@ $app->get('/', function () use ($app) {
         'options' => array()
     );
 
-    $cards []= array(
-        'title' => 'My Todo',
-        'issues' => $jira->getTodoList(),
-        'options' => array()
-    );
+
     $cards []= array(
         'title' => 'Resolved today by me',
         'issues' => $jira->getMyIssuesResolvedToday(),
@@ -185,15 +190,33 @@ $app->get('/', function () use ($app) {
         )
     );
 
+    */
+})->bind('home');
+
+$app->get('/{project}/home', function ($project) use ($app) {
+    $oauthConfig = $app['session']->get('oauth');
+
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+
+    $jira = new JIRA($app['oauth'], $oauthConfig);
+    $jira->setProject($project);
+
+    $cards = array();
+
+    $cards []= array(
+        'title' => 'My Todo',
+        'issues' => $jira->getTodoList(),
+        'options' => array()
+    );
+
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
         'oauth' => $oauthConfig,
-        'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
-        'mySprintIssuesSolvedCount' => $mySprintIssuesSolvedCount,
-        'mySprintIssuesCount' => $mySprintIssuesCount
-    ));*/
-})->bind('home');
+    ));
+})->bind('project_home');
 
 $app->get('/release', function () use ($app) {
     $oauthConfig = $app['session']->get('oauth');
