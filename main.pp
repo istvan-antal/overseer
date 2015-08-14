@@ -3,7 +3,7 @@ node default {
     $maxUploadedFileSize = $maxUploadSize
     $maxFileUploads = 50
 
-    package { ["npm"]: ensure => "installed" }
+    package { ["npm", "nodejs-legacy"]: ensure => "installed" }
 
     exec { "install_bower":
         require => Package["npm"],
