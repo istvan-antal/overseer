@@ -5,3 +5,4 @@
 /dev/blueprint
 *.pyc
 /web/bower_components
+/config.php
