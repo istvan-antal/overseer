@@ -5,22 +5,5 @@
         {% for card in cards %}
             {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title, 'options': card.options } %}
         {% endfor %}
-        {% if mySprintIssuesCount %}
-        <div class="ui card">
-            <div class="content">
-                <div class="header">My sprint progress</div>
-                <div class="ui divided list">
-                    {{ mySprintIssuesSolvedCount }} of {{ mySprintIssuesCount }}
-                </div>
-            </div>
-            <div class="extra content">
-                <div data-value="{{ mySprintIssuesSolvedCount }}" data-total="{{ mySprintIssuesCount }}" class="ui indicating progress">
-                    <div class="bar">
-                        <div class="progress"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 {% endblock %}
