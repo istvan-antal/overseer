@@ -211,8 +211,10 @@ class JIRA {
 
         $result['avgResolutionTime'] = $totalSupportTicketTime / count($tickets['issues']);
 
-        $result['issues'] = array_map(function ($issue) use ($this) {
-            return $this->mapIssueFields($issue);
+        $self = $this;
+
+        $result['issues'] = array_map(function ($issue) use ($self) {
+            return $self->mapIssueFields($issue);
         }, $tickets['issues']);
 
         return $result;
