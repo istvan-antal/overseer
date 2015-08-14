@@ -23,7 +23,12 @@ $app['twig']->addExtension(new TimeExtension(new TimeHelper()));
 $app['session.storage.handler'] = null;
 
 $app['oauth'] = $app->share(function() use($app, $config) {
-    $oauth = new Overseer\OAuthWrapper($config['jira']['baseUrl']);
+    $requestOptions = null;
+    if (isset($config['jira']['requestOptions'])) {
+        $requestOptions = $config['jira']['requestOptions'];
+    }
+
+    $oauth = new Overseer\OAuthWrapper($config['jira']['baseUrl'], $requestOptions);
     $oauth->setPrivateKey('../overseer.pem')
             ->setConsumerKey('1234567890')
             ->setConsumerSecret('abcd1234567890')

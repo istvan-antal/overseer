@@ -20,8 +20,11 @@ class OAuthWrapper {
 	protected $client;
 	protected $oauthPlugin;
 
-	public function __construct($baseUrl) {
+	private $requestOptions;
+
+	public function __construct($baseUrl, $requestOptions) {
 		$this->baseUrl = $baseUrl;
+		$this->requestOptions = $requestOptions;
 	}
 
 	public function requestTempCredentials() {
@@ -64,7 +67,7 @@ class OAuthWrapper {
 		if (!is_null($this->client)) {
 			return $this->client;
 		} else {
-			$this->client = new Client($this->baseUrl);
+			$this->client = new Client($this->baseUrl, $this->requestOptions);
                         $this->client->setSslVerification( __DIR__ . '/Resources/ca.pem');
 
 			$privateKey = $this->privateKey;
