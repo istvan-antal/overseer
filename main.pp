@@ -3,6 +3,16 @@ node default {
     $maxUploadedFileSize = $maxUploadSize
     $maxFileUploads = 50
 
+    package { ["npm"]: ensure => "installed" }
+
+    exec { "install_bower":
+        require => Package["npm"],
+        command => "npm install -g bower",
+        creates => "/usr/local/bin/bower",
+        logoutput => true,
+        timeout => 1800
+    }
+
     exec { "install_composer":
         require => Package["php5-cli"],
         command => "/bin/bash -c 'curl -sS https://getcomposer.org/installer | php; mv composer.phar /usr/local/bin/composer'",
