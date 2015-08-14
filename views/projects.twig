@@ -2,6 +2,6 @@
 
 {% block body -%}
     {% for project in projects %}
-        {{ project | json_encode() }}
+        <a href="/{{project.key}}/home">{{project.name}}</a>
     {% endfor %}
 {% endblock %}
