@@ -4,12 +4,14 @@ namespace Overseer;
 
 class JIRA {
 
+    private $baseUrl;
     private $oauth;
     private $oauthConfig;
 
     private $projectKey;
 
-    public function __construct(OAuthWrapper $oauth, array $oauthConfig) {
+    public function __construct($baseUrl, OAuthWrapper $oauth, array $oauthConfig) {
+        $this->baseUrl = $baseUrl;
         $this->oauth = $oauth;
         $this->oauthConfig = $oauthConfig;
     }
@@ -163,7 +165,7 @@ class JIRA {
         return array_map('Overseer\JIRA::mapIssueFields', $this->issueSearch($jql)['issues']);
     }
 
-    public static function mapIssueFields($item) {
+    public function mapIssueFields($item) {
         if (is_null($item['fields']['customfield_10007'])) {
             $sprints = array();
         } else {
@@ -173,6 +175,7 @@ class JIRA {
         }
         return array(
             'id' => $item['key'],
+            'url' => 'https://jira.condenastint.com/browse/'.$item['key'],
             'type' => $item['fields']['issuetype']['name'],
             'summary' => $item['fields']['summary'],
             'status' => $item['fields']['status']['name'],
@@ -208,7 +211,9 @@ class JIRA {
 
         $result['avgResolutionTime'] = $totalSupportTicketTime / count($tickets['issues']);
 
-        $result['issues'] = array_map('Overseer\JIRA::mapIssueFields', $tickets['issues']);
+        $result['issues'] = array_map(function ($issue) use ($this) {
+            return $this->mapIssueFields($issue);
+        }, $tickets['issues']);
 
         return $result;
     }

@@ -22,7 +22,7 @@ $app['twig']->addExtension(new TimeExtension(new TimeHelper()));
 
 $app['session.storage.handler'] = null;
 
-$app['oauth'] = $app->share(function() use($app, $config) {
+$app['oauth'] = $app->share(function() use ($app, $config) {
     $requestOptions = null;
     if (isset($config['jira']['requestOptions'])) {
         $requestOptions = $config['jira']['requestOptions'];
@@ -40,6 +40,17 @@ $app['oauth'] = $app->share(function() use($app, $config) {
     );
 
     return $oauth;
+});
+
+$app['jira'] = $app->share(function() use ($app, $config) {
+    $oauthConfig = $app['session']->get('oauth');
+
+    if (empty($oauthConfig)) {
+        return $app->redirect('/connect');
+    }
+
+    $jira = new JIRA($config['jira']['baseUrl'], $app['oauth'], $oauthConfig);
+    return $jira;
 });
 
 
@@ -124,13 +135,7 @@ $app->get('/status', function () use ($app) {
 })->bind('status');
 
 $app->get('/', function () use ($app) {
-    $oauthConfig = $app['session']->get('oauth');
-
-    if (empty($oauthConfig)) {
-        return $app->redirect('/connect');
-    }
-
-    $jira = new JIRA($app['oauth'], $oauthConfig);
+    $jira = $app['jira'];
 
     $projects = $jira->getProjects();
 
@@ -142,7 +147,7 @@ $app->get('/', function () use ($app) {
         'options' => array()
     );
 
-    return $app['twig']->render('projects.twig', array(
+    return $app['twig']->render('home.twig', array(
         'menu' => 'home',
         'oauth' => $oauthConfig,
         'projects' => $projects,
@@ -194,13 +199,7 @@ $app->get('/', function () use ($app) {
 })->bind('home');
 
 $app->get('/{project}/home', function ($project) use ($app) {
-    $oauthConfig = $app['session']->get('oauth');
-
-    if (empty($oauthConfig)) {
-        return $app->redirect('/connect');
-    }
-
-    $jira = new JIRA($app['oauth'], $oauthConfig);
+    $jira = $app['jira'];
     $jira->setProject($project);
 
     $cards = array();

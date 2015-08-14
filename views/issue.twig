@@ -1,6 +1,6 @@
 <div class="item">
     <div class="content">
-        <a href="https://jira.condenastint.com/browse/{{item.id}}" target="_blank">
+        <a href="{{item.url}}" target="_blank">
             {% if item.type == 'Bug' %}
                 <i class="bug icon"></i>
             {% elseif item.type == 'Story' %}
@@ -22,7 +22,7 @@
             {% endif %}
 
             {{item.summary}}
-            
+
             {% if item.status != 'Open' %}
                 {% if item.status == 'Resolved' %}
                     <i class="green checkmark icon"></i>
@@ -36,11 +36,11 @@
                     <span class="ui mini orange label">{{item.status}}</span>
                 {% endif %}
             {% endif %}
-            
+
             {% if item.status == 'Open' and item.sprints | length > 2 %}
                 <span class="ui mini red label">{{item.sprints | length }} sprints</span>
             {% endif %}
-            
+
             {% if options.includeAssignee is defined and item.assignee %}
                 <em>
                     {{ item.assignee.displayName }}
