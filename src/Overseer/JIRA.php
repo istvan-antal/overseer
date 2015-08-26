@@ -27,7 +27,7 @@ class JIRA {
             'Content-Type' => 'application/json'
         ), json_encode(array(
             'fields' => array(
-                'project' => array( 'key' => 'AL' ),
+                'project' => array( 'key' => $this->projectKey ),
                 'summary' => $fields['summary'],
                 'description' => $fields['description'],
                 'issuetype' => array( 'name' => $fields['type'] ),
@@ -97,7 +97,7 @@ class JIRA {
 
     public function getIssuesWorkedOn() {
         return $this->getIssuesByJql(
-            'project = AL AND sprint in openSprints() AND status = "In Progress"'
+            'project = '.$this->projectKey.' AND sprint in openSprints() AND status = "In Progress"'
         );
     }
 
@@ -114,13 +114,13 @@ class JIRA {
 
     public function getMyIssuesResolvedToday() {
         return $this->getIssuesByJql(
-            'assignee in (currentUser()) AND project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
+            'assignee in (currentUser()) AND project = '.$this->projectKey.' AND resolved >= startOfDay() ORDER BY assignee ASC'
         );
     }
 
     public function getMyIssuesResolvedYesterday() {
         return $this->getIssuesByJql(
-            'assignee in (currentUser()) AND project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
+            'assignee in (currentUser()) AND project = '.$this->projectKey.' AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
         );
     }
 
