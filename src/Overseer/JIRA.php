@@ -134,13 +134,13 @@ class JIRA {
 
     public function getIssuesResolvedToday() {
         return $this->getIssuesByJql(
-            'project = AL AND resolved >= startOfDay() ORDER BY assignee ASC'
+            'resolved >= startOfDay() ORDER BY assignee ASC'
         );
     }
 
     public function getIssuesResolvedYesterday() {
         return $this->getIssuesByJql(
-            'project = AL AND resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
+            'resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
         );
     }
 

@@ -176,6 +176,15 @@ $app->get('/', function () use ($app) {
             'includeAssignee' => true
         )
     );
+    
+    $cards []= array(
+        'title' => 'Resolved today',
+        'issues' => $jira->getIssuesResolvedToday(),
+    );
+    $cards []= array(
+        'title' => 'Resolved yesterday',
+        'issues' => $jira->getIssuesResolvedYesterday(),
+    );
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
@@ -421,14 +430,7 @@ $app->get('/team', function () use ($app) {
         'title' => 'Ready for review',
         'issues' => $jira->getTestingIssuesForSprint(),
     );
-    $cards []= array(
-        'title' => 'Resolved today',
-        'issues' => $jira->getIssuesResolvedToday(),
-    );
-    $cards []= array(
-        'title' => 'Resolved yesterday',
-        'issues' => $jira->getIssuesResolvedYesterday(),
-    );*/
+    */
 
     $supportStats = $jira->getSupportStats();
 
