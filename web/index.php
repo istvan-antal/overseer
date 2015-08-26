@@ -42,11 +42,23 @@ $app['oauth'] = $app->share(function() use ($app, $config) {
     return $oauth;
 });
 
-$app['jira'] = $app->share(function() use ($app, $config) {
+$app->before(function (Request $request, Application $app) {
+    if ($request->getRequestUri() === '/connect') {
+        return;
+    }
+    
     $oauthConfig = $app['session']->get('oauth');
 
     if (empty($oauthConfig)) {
         return $app->redirect('/connect');
+    }
+});
+
+$app['jira'] = $app->share(function() use ($app, $config) {
+    $oauthConfig = $app['session']->get('oauth');
+
+    if (empty($oauthConfig)) {
+        throw new Exception("Invalid session");
     }
 
     $jira = new JIRA($config['jira']['baseUrl'], $app['oauth'], $oauthConfig);
