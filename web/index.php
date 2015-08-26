@@ -233,6 +233,29 @@ $app->get('/{project}/home', function ($project) use ($app) {
     $jira->setProject($project);
 
     $cards = array();
+    
+    $cards []= array(
+        'title' => 'Issues in progress',
+        'issues' => $jira->getIssuesWorkedOn($project),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
+    
+    $cards []= array(
+        'title' => 'Resolved today',
+        'issues' => $jira->getIssuesResolvedToday($project),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
+    $cards []= array(
+        'title' => 'Resolved yesterday',
+        'issues' => $jira->getIssuesResolvedYesterday($project),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
 
 
     return $app['twig']->render('project.twig', array(

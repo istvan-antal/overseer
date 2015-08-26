@@ -104,9 +104,10 @@ class JIRA {
         );
     }
 
-    public function getIssuesWorkedOn() {
+    public function getIssuesWorkedOn($project = null) {
         return $this->getIssuesByJql(
-            'status = "In Progress"'
+            'status = "In Progress"',
+            $project
         );
     }
 
@@ -141,15 +142,17 @@ class JIRA {
         );
     }
 
-    public function getIssuesResolvedToday() {
+    public function getIssuesResolvedToday($project = null) {
         return $this->getIssuesByJql(
-            'resolved >= startOfDay() ORDER BY assignee ASC'
+            'resolved >= startOfDay() ORDER BY assignee ASC',
+            $project
         );
     }
 
-    public function getIssuesResolvedYesterday() {
+    public function getIssuesResolvedYesterday($project = null) {
         return $this->getIssuesByJql(
-            'resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC'
+            'resolved >= startOfDay(-1d) AND resolved < startOfDay() ORDER BY assignee ASC',
+            $project
         );
     }
 
@@ -170,7 +173,10 @@ class JIRA {
         );
     }
 
-    public function getIssuesByJql($jql) {
+    public function getIssuesByJql($jql, $project = null) {
+        if ($project) {
+            $jql = "project = $project AND $jql";
+        }
         return array_map('Overseer\JIRA::mapIssueFields', $this->issueSearch($jql)['issues']);
     }
 
