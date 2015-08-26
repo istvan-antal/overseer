@@ -161,7 +161,6 @@ $app->get('/', function () use ($app) {
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
-        'oauth' => $oauthConfig,
         'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
