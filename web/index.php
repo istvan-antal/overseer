@@ -175,7 +175,7 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getMyIssuesResolvedYesterday(),
         'options' => array()
     );
-    $cards []= array(
+    /*$cards []= array(
         'title' => 'Issues in progress',
         'issues' => $jira->getIssuesWorkedOn(),
         'options' => array(
@@ -196,7 +196,7 @@ $app->get('/', function () use ($app) {
         'options' => array(
             'includeAssignee' => true
         )
-    );
+    );*/
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
