@@ -155,6 +155,13 @@ class JIRA {
             $project
         );
     }
+    
+    public function getUnassignedIssues($project = null) {
+        return $this->getIssuesByJql(
+            'assignee in (EMPTY) AND status not in (Closed, Resolved)',
+            $project
+        );
+    }
 
     public function getIncomingSupportTickets() {
         return $this->getIssuesByJql(

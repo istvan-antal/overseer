@@ -249,6 +249,7 @@ $app->get('/{project}/home', function ($project) use ($app) {
             'includeAssignee' => true
         )
     );
+    
     $cards []= array(
         'title' => 'Resolved yesterday',
         'issues' => $jira->getIssuesResolvedYesterday($project),
@@ -256,7 +257,13 @@ $app->get('/{project}/home', function ($project) use ($app) {
             'includeAssignee' => true
         )
     );
-
+    
+    $cards []= array(
+        'title' => 'Unassigned issues',
+        'issues' => $jira->getUnassignedIssues($project),
+        'options' => array(
+        )
+    );
 
     return $app['twig']->render('project.twig', array(
         'menu' => 'home',
