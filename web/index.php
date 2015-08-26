@@ -42,11 +42,11 @@ $app['oauth'] = $app->share(function() use ($app, $config) {
     return $oauth;
 });
 
-$app->before(function (Request $request, Application $app) {
+$app->before(function (Request $request) use ($app) {
     if ($request->getRequestUri() === '/connect') {
         return;
     }
-    
+
     $oauthConfig = $app['session']->get('oauth');
 
     if (empty($oauthConfig)) {
