@@ -158,6 +158,24 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getTodoList(),
         'options' => array()
     );
+    
+    $cards []= array(
+        'title' => 'Resolved today by me',
+        'issues' => $jira->getMyIssuesResolvedToday(),
+        'options' => array()
+    );
+    $cards []= array(
+        'title' => 'Resolved yesterday by me',
+        'issues' => $jira->getMyIssuesResolvedYesterday(),
+        'options' => array()
+    );
+    $cards []= array(
+        'title' => 'Issues in progress',
+        'issues' => $jira->getIssuesWorkedOn(),
+        'options' => array(
+            'includeAssignee' => true
+        )
+    );
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
@@ -188,23 +206,7 @@ $app->get('/', function () use ($app) {
     );
 
 
-    $cards []= array(
-        'title' => 'Resolved today by me',
-        'issues' => $jira->getMyIssuesResolvedToday(),
-        'options' => array()
-    );
-    $cards []= array(
-        'title' => 'Resolved yesterday by me',
-        'issues' => $jira->getMyIssuesResolvedYesterday(),
-        'options' => array()
-    );
-    $cards []= array(
-        'title' => 'Issues in progress',
-        'issues' => $jira->getIssuesWorkedOn(),
-        'options' => array(
-            'includeAssignee' => true
-        )
-    );
+    
 
     */
 })->bind('home');
@@ -215,15 +217,9 @@ $app->get('/{project}/home', function ($project) use ($app) {
 
     $cards = array();
 
-    $cards []= array(
-        'title' => 'My Todo',
-        'issues' => $jira->getTodoList(),
-        'options' => array()
-    );
 
-    return $app['twig']->render('home.twig', array(
+    return $app['twig']->render('project.twig', array(
         'menu' => 'home',
-        'oauth' => $oauthConfig,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); }),
     ));
 })->bind('project_home');
