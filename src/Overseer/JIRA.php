@@ -106,7 +106,7 @@ class JIRA {
 
     public function getIssuesWorkedOn() {
         return $this->getIssuesByJql(
-            'sprint in openSprints() AND status = "In Progress"'
+            'status = "In Progress"'
         );
     }
 
