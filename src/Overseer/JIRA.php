@@ -63,6 +63,15 @@ class JIRA {
                 . 'status DESC, originalEstimate DESC, type DESC'
         );
     }
+    
+    public function getMyTestingIssues() {
+        return $this->getIssuesByJql(
+            'status in ("Resolved", "Done") AND '
+                . 'reporter in (currentUser()) '
+                . 'ORDER BY priority DESC, '
+                . 'status DESC, originalEstimate DESC, type DESC'
+        );
+    }
 
     public function getTestingIssues() {
         return $this->getIssuesByJql(

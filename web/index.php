@@ -160,6 +160,12 @@ $app->get('/', function () use ($app) {
     );
     
     $cards []= array(
+        'title' => 'To be reviewed by me',
+        'issues' => $jira->getMyTestingIssues(),
+        'options' => array()
+    );
+    
+    $cards []= array(
         'title' => 'Resolved today by me',
         'issues' => $jira->getMyIssuesResolvedToday(),
         'options' => array()
@@ -214,11 +220,7 @@ $app->get('/', function () use ($app) {
         'options' => array()
     );
 
-    $cards []= array(
-        'title' => 'To be reviewed',
-        'issues' => $jira->getMyTestingIssuesForSprint(),
-        'options' => array()
-    );
+    
 
 
     
