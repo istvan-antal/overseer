@@ -180,10 +180,16 @@ $app->get('/', function () use ($app) {
     $cards []= array(
         'title' => 'Resolved today',
         'issues' => $jira->getIssuesResolvedToday(),
+        'options' => array(
+            'includeAssignee' => true
+        )
     );
     $cards []= array(
         'title' => 'Resolved yesterday',
         'issues' => $jira->getIssuesResolvedYesterday(),
+        'options' => array(
+            'includeAssignee' => true
+        )
     );
 
     return $app['twig']->render('home.twig', array(
