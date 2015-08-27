@@ -48,8 +48,8 @@ class JIRA {
         );
     }
 
-    public function getIssuesFixedForVersion($version = 'EMPTY') {
-        return $this->getIssuesByJql("fixVersion = $version");
+    public function getIssuesFixedForVersion($project, $version = 'EMPTY') {
+        return $this->getIssuesByJql("project=$project AND fixVersion = $version");
     }
 
     public function getMyTestingIssuesForSprint() {
@@ -242,8 +242,8 @@ class JIRA {
         return $result;
     }
 
-    public function getVersions() {
-        return $this->api('/rest/api/2/project/AL/versions', array());
+    public function getVersions($project) {
+        return $this->api("/rest/api/2/project/$project/versions", array());
     }
 
     public function getProjects() {

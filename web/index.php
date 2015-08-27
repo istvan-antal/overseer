@@ -264,6 +264,20 @@ $app->get('/{project}/home', function ($project) use ($app) {
         'options' => array(
         )
     );
+    
+    $versions = $jira->getVersions($project);
+
+    $unreleasedVersions = array_filter($versions, function ($version) {
+        return !$version['released'];
+    });
+    
+    foreach ($unreleasedVersions as &$version) {
+        $cards []= array(
+            'title' => $version['name'],
+            'issues' => $jira->getIssuesFixedForVersion($project, $version['name']),
+            'options' => array()
+        );
+    }
 
     return $app['twig']->render('project.twig', array(
         'menu' => 'home',
