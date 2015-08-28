@@ -175,6 +175,13 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getMyIssuesResolvedYesterday(),
         'options' => array()
     );
+    
+    $cards []= array(
+        'title' => 'Blocked',
+        'issues' => $jira->getBlockedIssues(),
+        'options' => array()
+    );
+    
     /*$cards []= array(
         'title' => 'Issues in progress',
         'issues' => $jira->getIssuesWorkedOn(),

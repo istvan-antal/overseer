@@ -141,6 +141,14 @@ class JIRA {
                 . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
         );
     }
+    
+    public function getBlockedIssues() {
+        return $this->getIssuesByJql(
+            'status in (Blocked) AND '
+                . 'assignee in (currentUser()) '
+                . 'ORDER BY priority DESC, status DESC, originalEstimate DESC, type DESC'
+        );
+    }
 
     public function getIssuesResolvedToday($project = null) {
         return $this->getIssuesByJql(
