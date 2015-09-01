@@ -42,7 +42,7 @@ $app['oauth'] = $app->share(function() use ($app, $config) {
     return $oauth;
 });
 
-$app->error(function (\Guzzle\Http\Exception\BadResponseException $e, $code) use ($app) {
+$app->error(function (\Guzzle\Http\Exception\ClientErrorResponseException $e, $code) use ($app) {
     // Unauthorized
     if ($e->getCode() === 401) {
         $app['session']->clear();
