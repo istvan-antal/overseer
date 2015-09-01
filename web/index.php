@@ -186,8 +186,14 @@ $app->get('/', function () use ($app) {
             });
 
             foreach ($unreleasedVersions as &$version) {
+                $title = $version['name'];
+                
+                if ($version['description']) {
+                    $title = $version['description'].' - '.$title;
+                }
+                
                 $cards []= array(
-                    'title' => $version['name'],
+                    'title' => $title,
                     'issues' => $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']),
                     'options' => array()
                 );
