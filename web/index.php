@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 require '../config.php';
 
@@ -8,9 +8,16 @@ use Overseer\TimeExtension;
 use Overseer\TimeHelper;
 use Overseer\JIRA;
 
+use Entity\Widget;
+
 use Symfony\Component\HttpFoundation\Request;
 
 $app = new Silex\Application();
+
+/* @var $entityManager \Doctrine\ORM\EntityManager */
+
+$app['doctrine'] = $entityManager;
+
 $app['debug'] = true;
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__ . '/../views',
@@ -156,6 +163,8 @@ $app->get('/status', function () use ($app) {
 
 $app->get('/', function () use ($app) {
     $jira = $app['jira'];
+    $entityManager = $this->app['doctrine'];
+    $widgetRepository = $entityManager->getRepository('Entity\Widget');
 
     $projects = $jira->getProjects();
 
@@ -215,6 +224,7 @@ $app->get('/', function () use ($app) {
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
+        'widgets' => $widgetRepository->findAll(),
         'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
@@ -234,14 +244,26 @@ $app->get('/', function () use ($app) {
         'issues' => $jira->getIncomingSupportTickets(),
         'options' => array()
     );
-
-    
-
-
-    
-
     */
 })->bind('home');
+
+$app->get('/widget/create', function () use ($app) {
+    return $app['twig']->render('widgetForm.twig', array());
+})->bind('create_wiget');
+
+$app->post('/widget/create', function (Request $request) use ($app) {
+    $post = $request->request->all();
+    $entityManager = $this->app['doctrine'];
+    
+    $widget = new Widget();
+    $widget->setName($post['name']);
+    $widget->setType($post['type']);
+    
+    $entityManager->persist($widget);
+    $entityManager->flush();
+    
+    return $app->redirect('/');
+})->bind('create_wiget');
 
 $app->get('/{project}/home', function ($project) use ($app) {
     $jira = $app['jira'];
