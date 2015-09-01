@@ -42,6 +42,14 @@ $app['oauth'] = $app->share(function() use ($app, $config) {
     return $oauth;
 });
 
+$app->error(function (\BadResponseException $e, $code) use ($app) {
+    // Unauthorized
+    if ($e->getCode() === 401) {
+        $app['session']->clear();
+        return $app->redirect('/connect');
+    }
+});
+
 $app->before(function (Request $request) use ($app) {
     if ($request->getRequestUri() === '/connect') {
         return;
