@@ -248,7 +248,7 @@ $app->get('/', function () use ($app) {
 })->bind('home');
 
 $app->get('/widget/new', function () use ($app) {
-    return $app['twig']->render('widgetForm.twig', array());
+    return $app['twig']->render('widgetForm.twig', array( 'menu' => 'home' ));
 })->bind('new_wiget');
 
 $app->post('/widget/create', function (Request $request) use ($app) {
