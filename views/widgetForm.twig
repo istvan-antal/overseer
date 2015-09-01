@@ -31,7 +31,11 @@
         </div>
         <div class="field">
             <label>Status</label>
-            <input type="text" name="queryOptions[status][]">
+            <select name="queryOptions[status][]" multiple>
+                {% for status in statuses %}
+                    <option value="{{status.name}}">{{status.name}}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="field">
             <div class="ui checkbox">

@@ -226,7 +226,8 @@ $app->get('/widget/new', function () use ($app) {
     $jira = $app['jira'];
     return $app['twig']->render('widgetForm.twig', array(
         'menu' => 'home',
-        'projects' => $jira->getProjects()
+        'projects' => $jira->getProjects(),
+        'statuses' => $jira->getAllStatuses()
     ));
 })->bind('new_wiget');
 

@@ -199,7 +199,9 @@ class JIRA {
             if (count($query['status']) === 1) {
                 $conditions []= "status = '".$query['status'][0]."'";
             } else {
-                //TODO
+                $conditions []= "status IN (".implode(', ', array_map(function ($status) {
+                    return "'$status'";
+                }, $query['status'])).")";
             }
         }
         
@@ -266,6 +268,10 @@ class JIRA {
         }, $tickets['issues']);
 
         return $result;
+    }
+    
+    public function getAllStatuses() {
+        return $this->api("/rest/api/2/project/status", array());
     }
 
     public function getVersions($project) {
