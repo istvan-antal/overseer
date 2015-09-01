@@ -280,7 +280,7 @@ $app->post('/widget/create', function (Request $request) use ($app) {
     $widget->setQueryOptions($queryOptions);
     
     $displayOptions = $widget->getDisplayOptions();
-    foreach ($displayOptions as $k => $v) {
+    foreach ($post['displayOptions'] as $k => $v) {
         if (is_array($v) && empty($v)) {
             continue;
         }
