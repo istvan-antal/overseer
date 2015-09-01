@@ -271,7 +271,7 @@ class JIRA {
     }
     
     public function getAllStatuses() {
-        return $this->api("/rest/api/2/project/status", array());
+        return $this->api("/rest/api/2/status", array());
     }
 
     public function getVersions($project) {
