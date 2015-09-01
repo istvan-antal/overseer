@@ -166,8 +166,6 @@ $app->get('/', function () use ($app) {
     $entityManager = $app['doctrine'];
     $widgetRepository = $entityManager->getRepository('Entity\Widget');
 
-    $projects = $jira->getProjects();
-
     $cards = array();
     
     foreach ($widgetRepository->findAll() as $widget) {
@@ -214,7 +212,6 @@ $app->get('/', function () use ($app) {
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
-        'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
 })->bind('home');

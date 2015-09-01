@@ -1,11 +1,6 @@
 {% extends 'base.twig' %}
 
 {% block body -%}
-    <div class="ui vertical buttons" style="float: right;">
-        {% for project in projects %}
-            <a class="ui button" href="/{{project.key}}/home">{{project.name}}</a>
-        {% endfor %}
-    </div>
     <div class="card-holder">
         {% for card in cards %}
             {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title, 'options': card.options } %}
