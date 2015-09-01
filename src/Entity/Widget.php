@@ -74,7 +74,7 @@ class Widget {
      * @return Widget
      */
     public function setType($type) {
-        $this->name = $type;
+        $this->type = $type;
 
         return $this;
     }
