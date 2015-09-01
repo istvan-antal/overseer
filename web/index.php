@@ -169,12 +169,29 @@ $app->get('/', function () use ($app) {
     $projects = $jira->getProjects();
 
     $cards = array();
+    
+    foreach ($widgetRepository->findAll() as $widget) {
+        /* @var $widget Widget */
+        $type = $widget->getType();
+        
+        $card = array(
+            'title' => $widget->getName(),
+            'issues' => array(),
+            'options' => $widget->getDisplayOptions()
+        );
+        
+        switch ($type) {
+            case 'myTodo':
+                $card['issues'] = $jira->getTodoList();
+                break;
+            default:
+                throw new \Exception("Invalid widget type: $type");
+        }
+        
+        $cards []= $card;
+    }
 
-    $cards []= array(
-        'title' => 'My Todo',
-        'issues' => $jira->getTodoList(),
-        'options' => array()
-    );
+    /*
     
     $cards []= array(
         'title' => 'To be reviewed by me',
@@ -197,7 +214,7 @@ $app->get('/', function () use ($app) {
         'title' => 'Blocked',
         'issues' => $jira->getBlockedIssues(),
         'options' => array()
-    );
+    );*/
     
     /*$cards []= array(
         'title' => 'Issues in progress',
@@ -224,7 +241,6 @@ $app->get('/', function () use ($app) {
 
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
-        'widgets' => $widgetRepository->findAll(),
         'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
