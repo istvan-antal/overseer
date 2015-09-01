@@ -180,6 +180,23 @@ $app->get('/', function () use ($app) {
             'options' => $widget->getDisplayOptions()
         );
         
+        if ($type === 'releases') {
+            $versions = $jira->getVersions($widget->getQueryOptions()['project']);
+
+            $unreleasedVersions = array_filter($versions, function ($version) {
+                return !$version['released'];
+            });
+
+            foreach ($unreleasedVersions as &$version) {
+                $cards []= array(
+                    'title' => $version['name'],
+                    'issues' => $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']),
+                    'options' => array()
+                );
+            }
+            continue;
+        }
+        
         switch ($type) {
             case 'custom':
                 $card['issues'] = $jira->getIssues($widget->getQueryOptions());
@@ -195,58 +212,11 @@ $app->get('/', function () use ($app) {
         $cards []= $card;
     }
 
-    /*
-    $cards []= array(
-        'title' => 'Blocked',
-        'issues' => $jira->getBlockedIssues(),
-        'options' => array()
-    );*/
-    
-    /*$cards []= array(
-        'title' => 'Issues in progress',
-        'issues' => $jira->getIssuesWorkedOn(),
-        'options' => array(
-            'includeAssignee' => true
-        )
-    );
-    
-    $cards []= array(
-        'title' => 'Resolved today',
-        'issues' => $jira->getIssuesResolvedToday(),
-        'options' => array(
-            'includeAssignee' => true
-        )
-    );
-    $cards []= array(
-        'title' => 'Resolved yesterday',
-        'issues' => $jira->getIssuesResolvedYesterday(),
-        'options' => array(
-            'includeAssignee' => true
-        )
-    );*/
-
     return $app['twig']->render('home.twig', array(
         'menu' => 'home',
         'projects' => $projects,
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
-
-    /*$mySprintIssues = $jira->getMyIssuesForSprint();
-
-    $mySprintIssuesSolvedCount = count(array_filter($mySprintIssues, function ($issue) {
-        return in_array($issue['status'], array('Resolved', 'Closed'));
-    }));
-
-    $mySprintIssuesCount = count($mySprintIssues);
-
-    $cards = array();
-
-    $cards []= array(
-        'title' => 'New support tickets',
-        'issues' => $jira->getIncomingSupportTickets(),
-        'options' => array()
-    );
-    */
 })->bind('home');
 
 $app->get('/widget/new', function () use ($app) {
