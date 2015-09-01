@@ -185,7 +185,8 @@ $app->get('/', function () use ($app) {
                 $card['issues'] = $jira->getTodoList();
                 break;
             default:
-                throw new \Exception("Invalid widget type: $type");
+                $method = 'get'.ucfirst($type);
+                $card['issues'] = $jira->$method();
         }
         
         $cards []= $card;
