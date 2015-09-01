@@ -44,7 +44,7 @@ $app['oauth'] = $app->share(function() use ($app, $config) {
 
 $app->error(function (\Guzzle\Http\Exception\ClientErrorResponseException $e, $code) use ($app) {
     // Unauthorized
-    if ($e->getCode() === 401) {
+    if ($e->getStatusCode() === 401) {
         $app['session']->clear();
         return $app->redirect('/connect');
     }
