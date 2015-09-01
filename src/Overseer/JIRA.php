@@ -196,7 +196,11 @@ class JIRA {
         }
         
         if (isset($query['status'])) {
-            $conditions []= "status = '".$query['status']."'";
+            if (count($query['status']) === 1) {
+                $conditions []= "status = '".$query['status'][0]."'";
+            } else {
+                //TODO
+            }
         }
         
         return $this->getIssuesByJql(implode(' AND ', $conditions));
