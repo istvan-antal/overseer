@@ -210,7 +210,12 @@ $app->get('/', function () use ($app) {
                 break;
             default:
                 $method = 'get'.ucfirst($type);
-                $card['issues'] = $jira->$method();
+                $queryOptions = $widget->getQueryOptions();
+                if (isset($queryOptions['project'])) {
+                    $card['issues'] = $jira->$method($queryOptions['project']);
+                } else {
+                    $card['issues'] = $jira->$method();
+                } 
         }
         
         $cards []= $card;
