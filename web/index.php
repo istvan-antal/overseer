@@ -249,7 +249,7 @@ $app->get('/', function () use ($app) {
 
 $app->get('/widget/new', function () use ($app) {
     return $app['twig']->render('widgetForm.twig', array());
-})->bind('create_wiget');
+})->bind('new_wiget');
 
 $app->post('/widget/create', function (Request $request) use ($app) {
     $post = $request->request->all();
