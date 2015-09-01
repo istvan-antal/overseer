@@ -163,7 +163,7 @@ $app->get('/status', function () use ($app) {
 
 $app->get('/', function () use ($app) {
     $jira = $app['jira'];
-    $entityManager = $this->app['doctrine'];
+    $entityManager = $app['doctrine'];
     $widgetRepository = $entityManager->getRepository('Entity\Widget');
 
     $projects = $jira->getProjects();
@@ -253,7 +253,7 @@ $app->get('/widget/create', function () use ($app) {
 
 $app->post('/widget/create', function (Request $request) use ($app) {
     $post = $request->request->all();
-    $entityManager = $this->app['doctrine'];
+    $entityManager = $app['doctrine'];
     
     $widget = new Widget();
     $widget->setName($post['name']);
