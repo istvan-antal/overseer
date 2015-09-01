@@ -4,7 +4,7 @@
     "keywords": ["atlassian", "jira", "oauth", "guzzle"],
     "license": "MIT",
     "autoload": {
-        "psr-0": { 
+        "psr-0": {
             "": "src/"
          }
     },
@@ -12,6 +12,9 @@
     "require": {
         "guzzle/guzzle": "3.0.*",
         "silex/silex": "1.0.*",
-        "twig/twig": "1.*"
+        "twig/twig": "1.*",
+        "doctrine/orm": "~2.4",
+        "doctrine/migrations": "1.0.*@dev",
+        "doctrine/doctrine-migrations-bundle": "1.0.1"
     }
 }

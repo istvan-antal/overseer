@@ -1,0 +1,3 @@
+migrations_namespace: DoctrineMigrations
+table_name: migration_versions
+migrations_directory: migrations

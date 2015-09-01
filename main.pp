@@ -21,7 +21,7 @@ node default {
         timeout => 1800
     }
 
-    package { ["php5-fpm", "php5-cli", "php5-curl", "php5-mysql", "php5-redis"]: ensure => "installed" }
+    package { ["php5-fpm", "php5-cli", "php5-curl", "php5-sqlite", "php5-redis"]: ensure => "installed" }
 
     service { "php5-fpm":
         ensure => running,

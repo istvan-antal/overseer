@@ -1,9 +1,12 @@
-build: vendor web/bower_components
-	
+build: vendor web/bower_components storage
+	./vendor/bin/doctrine migrations:migrate --no-interaction
 
-vendor: composer.json composer.lock
+vendor: composer.lock
 	composer install
 	touch vendor
+
+composer.lock: composer.json
+	composer update
 
 web/bower_components: bower.json
 	bower install
@@ -11,6 +14,10 @@ web/bower_components: bower.json
 
 init-dev:
 	git clone git@github.com:istvan-antal/blueprint.git dev/blueprint
+	
+storage:
+	mkdir storage
+	chmod 0777 storage
 
 env:
 	./build.sh

@@ -32,3 +32,11 @@ https://bitbucket.org/atlassian_tutorial/atlassian-oauth-examples/src
 http://wiki.scn.sap.com/wiki/pages/viewpage.action?pageId=244809991
 
 Name the pem file overseer.pem and put it in the project's root folder.
+
+# Developing
+
+## Generating a db migration
+
+```bash
+./vendor/bin/doctrine migrations:diff
+```

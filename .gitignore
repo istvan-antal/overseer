@@ -6,3 +6,4 @@
 *.pyc
 /web/bower_components
 /config.php
+/storage
