@@ -187,6 +187,20 @@ class JIRA {
                 . 'AND status in (Open, "In Progress", Reopened, "Requires clarification")'
         );
     }
+    
+    public function getIssues($query) {
+        $conditions = array();
+        
+        if (isset($query['project'])) {
+            $conditions []= 'project = '.$query['project'];
+        }
+        
+        if (isset($query['status'])) {
+            $conditions []= "status = '".$query['status']."'";
+        }
+        
+        return $this->getIssuesByJql(implode(' AND ', $conditions));
+    }
 
     public function getIssuesByJql($jql, $project = null) {
         if ($project) {

@@ -181,6 +181,9 @@ $app->get('/', function () use ($app) {
         );
         
         switch ($type) {
+            case 'custom':
+                $card['issues'] = $jira->getIssues($widget->getQueryOptions());
+                break;
             case 'myTodo':
                 $card['issues'] = $jira->getTodoList();
                 break;
@@ -265,7 +268,11 @@ $app->get('/', function () use ($app) {
 })->bind('home');
 
 $app->get('/widget/new', function () use ($app) {
-    return $app['twig']->render('widgetForm.twig', array( 'menu' => 'home' ));
+    $jira = $app['jira'];
+    return $app['twig']->render('widgetForm.twig', array(
+        'menu' => 'home',
+        'projects' => $jira->getProjects()
+    ));
 })->bind('new_wiget');
 
 $app->post('/widget/create', function (Request $request) use ($app) {
@@ -275,6 +282,20 @@ $app->post('/widget/create', function (Request $request) use ($app) {
     $widget = new Widget();
     $widget->setName($post['name']);
     $widget->setType($post['type']);
+    
+    $queryOptions = $widget->getQueryOptions();
+    foreach ($post['queryOptions'] as $k => $v) {
+        if (is_array($v) && empty($v)) {
+            continue;
+        }
+        
+        if (is_string($v) && !$v) {
+            continue;
+        }
+        
+        $queryOptions[$k] = $v;
+    }
+    $widget->setQueryOptions($queryOptions);
     
     $entityManager->persist($widget);
     $entityManager->flush();

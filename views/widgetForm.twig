@@ -10,6 +10,7 @@
         <div class="field">
             <label>Type</label>
             <select name="type">
+                <option value="custom">Custom</option>
                 <option value="myTodo">My ToDo</option>
                 <option value="myTestingIssues">My Testing Issues</option>
                 <option value="myIssuesResolvedToday">My Issues Resolved Today</option>
@@ -17,6 +18,19 @@
                 <option value="blockedIssues">Blocked Issues</option>
                 <option value="issuesWorkedOn">Issues Worked On</option>
             </select>
+        </div>
+        <div class="field">
+            <label>Project</label>
+            <select name="queryOptions[project]">
+                <option value=""></option>
+                {% for project in projects %}
+                <option value="{{project.key}}">{{project.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label>Status</label>
+            <input type="text" name="queryOptions[status][]">
         </div>
         <input class="ui blue submit button" type="submit" value="Create">
     </form>    
