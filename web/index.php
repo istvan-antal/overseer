@@ -196,24 +196,6 @@ $app->get('/', function () use ($app) {
     }
 
     /*
-    
-    $cards []= array(
-        'title' => 'To be reviewed by me',
-        'issues' => $jira->getMyTestingIssues(),
-        'options' => array()
-    );
-    
-    $cards []= array(
-        'title' => 'Resolved today by me',
-        'issues' => $jira->getMyIssuesResolvedToday(),
-        'options' => array()
-    );
-    $cards []= array(
-        'title' => 'Resolved yesterday by me',
-        'issues' => $jira->getMyIssuesResolvedYesterday(),
-        'options' => array()
-    );
-    
     $cards []= array(
         'title' => 'Blocked',
         'issues' => $jira->getBlockedIssues(),
@@ -296,6 +278,20 @@ $app->post('/widget/create', function (Request $request) use ($app) {
         $queryOptions[$k] = $v;
     }
     $widget->setQueryOptions($queryOptions);
+    
+    $displayOptions = $widget->getDisplayOptions();
+    foreach ($displayOptions as $k => $v) {
+        if (is_array($v) && empty($v)) {
+            continue;
+        }
+        
+        if (is_string($v) && !$v) {
+            continue;
+        }
+        
+        $displayOptions[$k] = $v;
+    }
+    $widget->setDisplayOptions($displayOptions);
     
     $entityManager->persist($widget);
     $entityManager->flush();
