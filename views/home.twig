@@ -10,5 +10,16 @@
         {% for card in cards %}
             {% include 'issueListCard.twig' with { 'issues': card.issues, 'title': card.title, 'options': card.options } %}
         {% endfor %}
+        <div class="content">
+            <div class="header">{{ title }}</div>
+            <div class="ui divided list">
+                {% for item in issues %}
+                    {% include 'issue.twig' %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
+    <a class="ui primary button" href="/widget/new">
+        <i class="plus icon"></i>
+    </a>
 {% endblock %}
