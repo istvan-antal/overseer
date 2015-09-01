@@ -11,7 +11,7 @@ $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src"), 
 // obtaining the entity manager
 $entityManager = EntityManager::create(array(
         'driver' => 'pdo_sqlite',
-        'path' => 'storage/db.sqlite'
+        'path' => __DIR__.'/storage/db.sqlite'
     ),
     $config
 );
