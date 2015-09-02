@@ -223,6 +223,12 @@ class JIRA {
                 return explode(',', explode('name=', $item)[1])[0];
             }, $item['fields']['customfield_10007']);
         }
+        
+        $resolved = null;
+        if ($item['fields']['resolutiondate']) {
+            $resolved = new \DateTime($item['fields']['resolutiondate']);
+        }
+        
         return array(
             'id' => $item['key'],
             'url' => $this->baseUrl.'browse/'.$item['key'],
@@ -232,7 +238,8 @@ class JIRA {
             'assignee' => $item['fields']['assignee'],
             'components' => $item['fields']['components'],
             'sprints' => $sprints,
-            'created' => new \DateTime($item['fields']['created'])
+            'created' => new \DateTime($item['fields']['created']),
+            'resolved' => $resolved
         );
     }
 
@@ -285,7 +292,6 @@ class JIRA {
     private function issueSearch($jql) {
         return $this->api('rest/api/2/search', array(
             'jql' => $jql,
-            'fields' => array('resolved'),
             'maxResults' => 1000
         ));
     }
