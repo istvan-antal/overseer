@@ -198,8 +198,11 @@ $app->get('/', function () use ($app) {
                     'title' => $title,
                     'issues' => $issues,
                     'options' => $widget->getDisplayOptions(),
-                    'resolvedIssueCount' => array_reduce($issues, function ($issue) {
-                        return 0;
+                    'resolvedIssueCount' => array_reduce($issues, function ($a, $b) {
+                        if (is_null($b['resolved'])) {
+                            return 0;
+                        }
+                        return 1;
                     }, 0)
                 );
             }
