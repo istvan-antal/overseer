@@ -285,7 +285,7 @@ class JIRA {
     private function issueSearch($jql) {
         return $this->api('rest/api/2/search', array(
             'jql' => $jql,
-            'field' => array('resolutiondate'),
+            'fields' => array('resolved'),
             'maxResults' => 1000
         ));
     }
