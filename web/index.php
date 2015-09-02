@@ -195,7 +195,7 @@ $app->get('/', function () use ($app) {
                 $cards []= array(
                     'title' => $title,
                     'issues' => $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']),
-                    'options' => array()
+                    'options' => $widget->getDisplayOptions()
                 );
             }
             continue;
