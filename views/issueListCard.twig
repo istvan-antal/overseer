@@ -9,5 +9,12 @@
     </div>
     <div class="extra content">
         {{ issues | length }} items
+        {% if options.showProgressBar %}
+            <div data-value="{{ 0 }}" data-total="issues | length" class="ui indicating progress">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+        {% endif  %}
     </div>
 </div>
