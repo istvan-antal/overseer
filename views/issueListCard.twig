@@ -10,7 +10,7 @@
     <div class="extra content">
         {{ issues | length }} items
         {% if options.showProgressBar is defined and options.showProgressBar %}
-            <div data-value="{{ resolvedIssueCount }}" data-total="issues | length" class="ui indicating progress">
+            <div data-value="{{ resolvedIssueCount }}" data-total="{{ issues | length }}" class="ui indicating progress">
                 <div class="bar">
                     <div class="progress"></div>
                 </div>

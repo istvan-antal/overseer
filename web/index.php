@@ -200,9 +200,9 @@ $app->get('/', function () use ($app) {
                     'options' => $widget->getDisplayOptions(),
                     'resolvedIssueCount' => array_reduce($issues, function ($a, $b) {
                         if (is_null($b['resolved'])) {
-                            return 0;
+                            return $a;
                         }
-                        return 1;
+                        return $a + 1;
                     }, 0)
                 );
             }
