@@ -192,10 +192,15 @@ $app->get('/', function () use ($app) {
                     $title = $version['description'].' - '.$title;
                 }
                 
+                $issues = $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']);
+                
                 $cards []= array(
                     'title' => $title,
-                    'issues' => $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']),
-                    'options' => $widget->getDisplayOptions()
+                    'issues' => $issues,
+                    'options' => $widget->getDisplayOptions(),
+                    'resolvedIssueCount' => array_reduce($issues, function ($issue) {
+                        return 0;
+                    }, 0)
                 );
             }
             continue;
