@@ -20,7 +20,7 @@ set iconMap = {
 
             {{item.summary}}
 
-            {% if item.status != 'Open' and item.status != 'Closed' %}
+            {% if item.status != 'Open' and item.status != 'Closed' and item.status != 'Resolved' %}
                 {% if item.status == 'In Progress' %}
                     <i class="orange crosshairs icon"></i>
                 {% else %}
