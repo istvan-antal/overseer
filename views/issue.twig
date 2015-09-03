@@ -1,22 +1,19 @@
-<div class="item">
+{%
+set iconMap = {
+    'Bug': 'bug',
+    'Story': 'idea',
+    'Sub-task': 'cubes',
+    'Technical task': 'cube',
+    'Task': 'cube',
+    'Improvement': 'lightning',
+    'New Feature': 'star',
+    'Support Request': 'warning'
+}
+%}<div class="item">
     <div class="content">
         <a href="{{item.url}}" target="_blank">
-            {% if item.type == 'Bug' %}
-                <i class="bug icon"></i>
-            {% elseif item.type == 'Story' %}
-                <i class="idea icon"></i>
-            {% elseif item.type == 'Sub-task' %}
-                <i class="cubes icon"></i>
-            {% elseif item.type == 'Technical task' %}
-                <i class="cube icon"></i>
-            {% elseif item.type == 'Task' %}
-                <i class="cube icon"></i>
-            {% elseif item.type == 'Improvement' %}
-                <i class="lightning icon"></i>
-            {% elseif item.type == 'New Feature' %}
-                <i class="star icon"></i>
-            {% elseif item.type == 'Support Request' %}
-                <i class="warning icon"></i>
+            {% if iconMap[item.type] %}
+                <i class="{% if item.resolved %}green {% endif %}{{ iconMap[item.type] }} icon"></i>
             {% else %}
                 <span class="ui label">{{item.type}}</span>
             {% endif %}
@@ -24,13 +21,7 @@
             {{item.summary}}
 
             {% if item.status != 'Open' %}
-                {% if item.status == 'Resolved' %}
-                    <i class="green checkmark icon"></i>
-                {% elseif item.status == 'Closed' %}
-                    <i class="green checkmark icon"></i>
-                {% elseif item.status == 'Done' %}
-                    <i class="green checkmark icon"></i>
-                {% elseif item.status == 'In Progress' %}
+                {% if item.status == 'In Progress' %}
                     <i class="orange crosshairs icon"></i>
                 {% else %}
                     <span class="ui mini orange label">{{item.status}}</span>
