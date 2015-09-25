@@ -195,6 +195,10 @@ class JIRA {
             $conditions []= 'project = '.$query['project'];
         }
         
+        if (isset($query['isUnassigned']) && $query['isUnassigned']) {
+            $conditions []= 'assignee IS EMPTY';
+        }
+        
         if (isset($query['status'])) {
             if (count($query['status']) === 1) {
                 $conditions []= "status = '".$query['status'][0]."'";
