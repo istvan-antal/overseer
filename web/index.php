@@ -188,6 +188,7 @@ $app->get('/', function () use ($app) {
             usort($unreleasedVersions, function ($av, $bv) {
                 $a = 0;
                 $b = 0;
+                
                 if (isset($av['releaseDate'])) {
                     $a = strtotime($av['releaseDate']);
                 }
@@ -196,7 +197,13 @@ $app->get('/', function () use ($app) {
                     $b = strtotime($bv['releaseDate']);
                 }
                 
-                return $b - $a;
+                $result = $b - $a;
+                
+                if (!$result) {
+                    $result = strcmp($bv['name'], $av['name']);
+                }
+                
+                return $result;
             });
 
             foreach ($unreleasedVersions as &$version) {
