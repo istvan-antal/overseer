@@ -196,7 +196,7 @@ $app->get('/', function () use ($app) {
                     $b = strtotime($bv['releaseDate']);
                 }
                 
-                return $a - $b;
+                return $b - $a;
             });
 
             foreach ($unreleasedVersions as &$version) {
