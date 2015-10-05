@@ -200,7 +200,7 @@ $app->get('/', function () use ($app) {
                 $result = $b - $a;
                 
                 if (!$result) {
-                    $result = strcmp($bv['name'], $av['name']);
+                    $result = strcmp($av['name'], $bv['name']);
                 }
                 
                 return $result;
