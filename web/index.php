@@ -184,6 +184,20 @@ $app->get('/', function () use ($app) {
             $unreleasedVersions = array_filter($versions, function ($version) {
                 return !$version['released'];
             });
+            
+            usort($unreleasedVersions, function ($av, $bv) {
+                $a = 0;
+                $b = 0;
+                if (isset($av['releaseDate'])) {
+                    $a = strtotime($av['releaseDate']);
+                }
+                
+                if (isset($bv['releaseDate'])) {
+                    $b = strtotime($bv['releaseDate']);
+                }
+                
+                return $a - $b;
+            });
 
             foreach ($unreleasedVersions as &$version) {
                 $title = $version['name'];
