@@ -162,7 +162,7 @@ $app->get('/status', function () use ($app) {
 })->bind('status');
 
 $app->get('/', function () use ($app) {
-    $jira = $app['jira'];
+    $jira = $app['jira']; /* @var $jira JIRA */
     $entityManager = $app['doctrine'];
     $widgetRepository = $entityManager->getRepository('Entity\Widget');
 
@@ -190,6 +190,10 @@ $app->get('/', function () use ($app) {
                 
                 if ($version['description']) {
                     $title = $version['description'].' - '.$title;
+                }
+                
+                if (isset($version['releaseData'])) {
+                    $title .= ' - '.$version['releaseData'];
                 }
                 
                 $issues = $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']);
