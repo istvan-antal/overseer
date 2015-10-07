@@ -197,7 +197,7 @@ $app->get('/', function () use ($app) {
                     $b = strtotime($bv['releaseDate']);
                 }
                 
-                $result = $b - $a;
+                $result = $a - $b;
                 
                 if (!$result) {
                     $result = strcmp($av['name'], $bv['name']);
