@@ -190,7 +190,7 @@ $app->get('/', function () use ($app) {
                     return strcmp($av['name'], $bv['name']);
                 }
                 
-                return strtotime($bv['releaseDate']) - strtotime($av['releaseDate']);
+                return strtotime($av['releaseDate']) - strtotime($bv['releaseDate']);
             });
 
             foreach ($unreleasedVersions as &$version) {
