@@ -10,7 +10,7 @@ set iconMap = {
     'Support Request': 'warning'
 }
 %}
-<tr>
+<tr{% if item.resolved %} class="positive"{% endif %}>
     <td>
         <a href="{{item.url}}" target="_blank">
             {% if iconMap[item.type] %}
