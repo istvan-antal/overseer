@@ -37,7 +37,7 @@ $app['oauth'] = $app->share(function() use ($app, $config) {
 
     $oauth = new Overseer\OAuthWrapper($config['jira']['baseUrl'], $requestOptions);
     $oauth->setPrivateKey('../overseer.pem')
-            ->setConsumerKey('1234567890')
+            ->setConsumerKey($config['jira']['consumerKey'])
             ->setConsumerSecret('abcd1234567890')
             ->setRequestTokenUrl('plugins/servlet/oauth/request-token')
             ->setAuthorizationUrl('plugins/servlet/oauth/authorize?oauth_token=%s')
