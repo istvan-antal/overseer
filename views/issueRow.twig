@@ -1,0 +1,51 @@
+{%
+set iconMap = {
+    'Bug': 'bug',
+    'Story': 'idea',
+    'Sub-task': 'cubes',
+    'Technical task': 'cube',
+    'Task': 'cube',
+    'Improvement': 'lightning',
+    'New Feature': 'star',
+    'Support Request': 'warning'
+}
+%}
+<tr>
+    <td>
+        <a href="{{item.url}}" target="_blank">
+            {% if iconMap[item.type] %}
+                <i class="{% if item.resolved %}green {% endif %}{{ iconMap[item.type] }} icon"></i>
+            {% else %}
+                <span class="ui label">{{item.type}}</span>
+            {% endif %}
+
+            {{item.summary}}
+
+            {% if item.status != 'Open' and item.status != 'Closed' and item.status != 'Resolved' %}
+                {% if item.status == 'In Progress' %}
+                    <i class="orange crosshairs icon"></i>
+                {% else %}
+                    <span class="ui mini orange label">{{item.status}}</span>
+                {% endif %}
+            {% endif %}
+
+            {% if item.status == 'Open' and item.sprints | length > 2 %}
+                <span class="ui mini red label">{{item.sprints | length }} sprints</span>
+            {% endif %}
+        </a> 
+    </td>
+    <td>
+        {% if options.includeEstimate is defined and options.includeEstimate and item.originalEstimate %}
+            <div>
+                {{ time_diff(item.originalEstimate) }}
+            </div>
+        {% endif %}
+    </td>
+    <td>
+        {% if options.includeAssignee is defined and item.assignee %}
+            <em>
+                {{ item.assignee.displayName }}
+            </em>
+        {% endif %}
+    </td>
+</tr>
