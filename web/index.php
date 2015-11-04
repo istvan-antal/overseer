@@ -196,7 +196,7 @@ $app->get('/', function () use ($app) {
             foreach ($unreleasedVersions as &$version) {
                 $title = $version['name'];
                 
-                if ($version['description']) {
+                if (isset($version['description'])) {
                     $title = $version['description'].' - '.$title;
                 }
                 
@@ -207,6 +207,7 @@ $app->get('/', function () use ($app) {
                 $issues = $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']);
                 
                 $cards []= array(
+                    'url' => 'versions/'.$widget->getQueryOptions()['project'].'/'.$version['name'],
                     'title' => $title,
                     'issues' => $issues,
                     'options' => $widget->getDisplayOptions(),
@@ -249,6 +250,36 @@ $app->get('/', function () use ($app) {
         'cards' => array_filter($cards, function ($card) { return count($card['issues']); })
     ));
 })->bind('home');
+
+$app->get('/versions/{projectId}/{versionName}', function ($projectId, $versionName) use ($app) {
+    $jira = $app['jira']; /* @var $jira JIRA */
+    
+    $versions = $jira->getVersions($projectId);
+    $issues = $jira->getIssuesFixedForVersion($projectId, $versionName);
+    
+    $version = array_values(array_filter($versions, function ($currentVersion) use ($versionName) {
+        return $currentVersion['name'] === $versionName;
+    }))[0];
+    
+    return $app['twig']->render('version.twig', array(
+        'menu' => 'home',
+        'version' => $version,
+        'issues' => $issues,
+        'resolvedIssueCount' => array_reduce($issues, function ($a, $b) {
+            if ($b['status'] === 'Closed') {
+                return $a + 1;
+            }
+            if (!is_null($b['resolved'])) {
+                return $a + 1;
+            }
+            return $a;
+        }, 0),
+        'options' => array(
+            'includeAssignee' => true,
+            'showProgressBar' => true
+        )
+    ));
+})->bind('version_view');
 
 $app->get('/widget/new', function () use ($app) {
     $jira = $app['jira'];

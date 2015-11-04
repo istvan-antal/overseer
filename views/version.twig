@@ -1,0 +1,24 @@
+{% extends 'base.twig' %}
+
+{% block body -%}
+    <div style="width: auto;" class="ui card">
+        <div class="content">
+            <div class="header">{{ version.name }}</div>
+            <div class="ui divided list">
+                {% for item in issues %}
+                    {% include 'issue.twig' %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="extra content">
+            {{ issues | length }} items
+            {% if options.showProgressBar is defined and options.showProgressBar %}
+                <div data-value="{{ resolvedIssueCount }}" data-total="{{ issues | length }}" class="ui indicating progress">
+                    <div class="bar">
+                        <div class="progress"></div>
+                    </div>
+                </div>
+            {% endif  %}
+        </div>
+    </div>
+{% endblock %}

@@ -31,12 +31,11 @@ set iconMap = {
             {% if item.status == 'Open' and item.sprints | length > 2 %}
                 <span class="ui mini red label">{{item.sprints | length }} sprints</span>
             {% endif %}
-
-            {% if options.includeAssignee is defined and item.assignee %}
-                <em>
-                    {{ item.assignee.displayName }}
-                </em>
-            {% endif %}
         </a>
+        {% if options.includeAssignee is defined and item.assignee %}
+            <em style="float: right; display: block; font-weight: bold;">
+                {{ item.assignee.displayName }}
+            </em>
+        {% endif %}
     </div>
 </div>
