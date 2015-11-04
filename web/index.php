@@ -276,7 +276,8 @@ $app->get('/versions/{projectId}/{versionName}', function ($projectId, $versionN
         }, 0),
         'options' => array(
             'includeAssignee' => true,
-            'showProgressBar' => true
+            'showProgressBar' => true,
+            'includeEstimate' => true
         )
     ));
 })->bind('version_view');

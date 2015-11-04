@@ -233,6 +233,12 @@ class JIRA {
             $resolved = new \DateTime($item['fields']['resolutiondate']);
         }
         
+        $originalEstimate = null;
+        
+        if ($item['fields']['timeoriginalestimate']) {
+            $originalEstimate = \DateTime::createFromFormat('U', time() + $item['fields']['timeoriginalestimate']);
+        }
+        
         return array(
             'id' => $item['key'],
             'url' => $this->baseUrl.'browse/'.$item['key'],
@@ -242,6 +248,7 @@ class JIRA {
             'assignee' => $item['fields']['assignee'],
             'components' => $item['fields']['components'],
             'sprints' => $sprints,
+            'originalEstimate' => $originalEstimate,
             'created' => new \DateTime($item['fields']['created']),
             'resolved' => $resolved
         );

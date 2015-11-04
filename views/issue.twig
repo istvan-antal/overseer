@@ -31,11 +31,16 @@ set iconMap = {
             {% if item.status == 'Open' and item.sprints | length > 2 %}
                 <span class="ui mini red label">{{item.sprints | length }} sprints</span>
             {% endif %}
-        </a>
+        </a>        
         {% if options.includeAssignee is defined and item.assignee %}
-            <em style="float: right; display: block; font-weight: bold;">
+            <em style="float: right; display: block; font-weight: bold; width: 150px; text-align: right">
                 {{ item.assignee.displayName }}
             </em>
+        {% endif %}
+        {% if options.includeEstimate is defined and options.includeEstimate and item.originalEstimate %}
+            <div style="float: right; text-align: left;">
+                {{ time_diff(item.originalEstimate) }}
+            </div>
         {% endif %}
     </div>
 </div>
