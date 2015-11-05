@@ -54,6 +54,10 @@
             .card-holder .ui.list .item i.icon {
                 display: inline;
             }
+            
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
@@ -97,6 +101,14 @@
         $(function () {
             $('.ui.checkbox').checkbox();
             $('.ui.progress').progress();
+            
+            $('.ux-issue-resolved-toggle').change(function () {
+                if ($(this).is(':checked')) {                    
+                    $('.ux-issue-resolved').addClass('hidden');
+                } else {
+                    $('.ux-issue-resolved').removeClass('hidden');
+                }
+            });
         });
     </script>
 </body>
