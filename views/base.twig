@@ -97,19 +97,6 @@
     <script src="/bower_components/jquery-ui/ui/jquery.ui.widget.js"></script>
     <script src="/bower_components/jquery-ui/ui/jquery.ui.mouse.js"></script>
     <script src="/bower_components/jquery-ui/ui/jquery.ui.sortable.js"></script>
-    <script>
-        $(function () {
-            $('.ui.checkbox').checkbox();
-            $('.ui.progress').progress();
-            
-            $('.ux-issue-resolved-toggle').change(function () {
-                if ($(this).is(':checked')) {                    
-                    $('.ux-issue-resolved').addClass('hidden');
-                } else {
-                    $('.ux-issue-resolved').removeClass('hidden');
-                }
-            });
-        });
-    </script>
+    <script src="/js/main.js"></script>
 </body>
 </html>
