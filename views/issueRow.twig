@@ -36,7 +36,7 @@ set iconMap = {
     </td>
     <td>
         {% if item.originalEstimate %}
-            {{ time_diff(item.originalEstimate) }}
+            {{ time_diff(item.originalEstimateTime) }}
         {% else %}
             {% if not item.resolved %}
             <i class="attention icon"></i> Requires Estimate

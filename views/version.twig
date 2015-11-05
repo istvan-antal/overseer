@@ -36,4 +36,31 @@
             </tr>
         </tfoot>
     </table>
+    
+    <table class="ui striped selectable table">
+        <thead>
+            <tr>
+                <th class="twelve wide">Name</th>
+                <th class="two wide">Estimate left</th>
+                <th class="two wide">Estimated progress</th>
+            </tr>
+        </thead>
+        {% for assignee in assignees %}
+            <tr>
+                <td>
+                    {{ assignee.displayName }}
+                </td>
+                <td>
+                    {{ ((assignee.totalEstimate - assignee.resolvedEstimate) / 3600) | round }} hours
+                </td>
+                <td>
+                    <div style="margin-bottom: 0;" data-value="{{ assignee.resolvedEstimate }}" data-total="{{ assignee.totalEstimate }}" class="ui indicating progress">
+                        <div class="bar">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

@@ -265,6 +265,27 @@ $app->get('/versions/{projectId}/{versionName}', function ($projectId, $versionN
         return strcmp($a['assignee']['displayName'], $b['assignee']['displayName']);
     });
     
+    $assignees = array();
+    
+    foreach ($issues as &$issue) {
+        $name = $issue['assignee']['name'];
+        if ($name) {
+            if (!isset($assignees[$name])) {
+                $assignees[$name] = $issue['assignee'];
+                $assignees[$name]['totalEstimate'] = 0;
+                $assignees[$name]['resolvedEstimate'] = 0;
+            }
+            
+            if ($issue['originalEstimate']) {
+                $issue['originalEstimateTime'] = \DateTime::createFromFormat('U', time() + $issue['originalEstimate']);
+                $assignees[$name]['totalEstimate'] += $issue['originalEstimate'];
+                if ($issue['resolved'] !== null) {
+                    $assignees[$name]['resolvedEstimate'] += $issue['originalEstimate'];
+                }
+            }
+        }
+    }
+    
     return $app['twig']->render('version.twig', array(
         'menu' => 'home',
         'version' => $version,
@@ -278,6 +299,7 @@ $app->get('/versions/{projectId}/{versionName}', function ($projectId, $versionN
             }
             return $a;
         }, 0),
+        'assignees' => $assignees,
         'options' => array(
             'includeAssignee' => true,
             'showProgressBar' => true,
