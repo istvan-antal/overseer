@@ -261,6 +261,10 @@ $app->get('/versions/{projectId}/{versionName}', function ($projectId, $versionN
         return $currentVersion['name'] === $versionName;
     }))[0];
     
+    usort($issues, function ($a, $b) {
+        return strcmp($a['assignee']['displayName'], $b['assignee']['displayName']);
+    });
+    
     return $app['twig']->render('version.twig', array(
         'menu' => 'home',
         'version' => $version,
