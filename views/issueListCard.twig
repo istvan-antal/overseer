@@ -10,7 +10,8 @@
             {% if releaseDate is defined %}
             <div class="ui left pointing{% if daysLeft == 0 %} {% if issuesAreResolvedForCard %}green{% else %}orange{% endif %}{% endif %} label">
                 {% if daysLeft == 0 %}
-                    <i class="check circle outline icon"></i> today
+                    {% if issuesAreResolvedForCard %}<i class="check circle outline icon"></i>{% endif %}
+                    today
                 {% else %}
                     {{ daysLeft }} days left
                 {% endif %}
