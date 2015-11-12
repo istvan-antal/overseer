@@ -1,9 +1,6 @@
 {% extends 'base.twig' %}
 
 {% block body -%}
-    <label>
-        <input type="checkbox" class="ux-issue-resolved-toggle"> hide resolved
-    </label>
     <div class="card-holder">
         {% for card in cards %}
             {% include 'issueListCard.twig' with card %}
