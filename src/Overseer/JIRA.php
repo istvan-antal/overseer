@@ -287,7 +287,16 @@ class JIRA {
     }
 
     public function getVersions($project) {
-        return $this->api("/rest/api/2/project/$project/versions", array());
+        $versions = $this->api("/rest/api/2/project/$project/versions", array());
+        $now = new \DateTime();
+        
+        return array_map(function ($version) use ($now) {
+            if (isset($version['releaseDate'])) {
+                $releaseDate = \DateTime::createFromFormat('Y-m-d', $version['releaseDate']);
+                $version['daysLeft'] = $now->diff($releaseDate)->format('%a');
+            }
+            return $version;
+        }, $versions);
     }
 
     public function getProjects() {

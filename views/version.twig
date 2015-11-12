@@ -3,7 +3,26 @@
 {% block body -%}
     <h2 class="ui dividing header">
         {{ version.name }}
+        {% if version.releaseDate is defined %}
+            <div class="ui left pointing{% if version.daysLeft == 0 %} orange{% endif %} label">
+                {% if version.daysLeft == 0 %}
+                    today
+                {% else %}
+                    {{ version.daysLeft }} days left
+                {% endif %}
+            </div>
+        {% endif %}
     </h2>
+
+    {% if version.releaseDate is not defined %}
+        <div class="ui warning message">
+            <div class="header">
+                No release date!
+            </div>
+            No release date has been specified for this version.
+        </div>
+    {% endif %}
+
     <label>
         <input type="checkbox" class="ux-issue-resolved-toggle"> hide resolved
     </label>
@@ -31,12 +50,12 @@
                             </div>
                         </div>
                     {% endif  %}
-                    
+
                 </th>
             </tr>
         </tfoot>
     </table>
-    
+
     <table class="ui striped selectable table">
         <thead>
             <tr>

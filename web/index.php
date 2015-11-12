@@ -206,7 +206,7 @@ $app->get('/', function () use ($app) {
                 
                 $issues = $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']);
                 
-                $cards []= array(
+                $card = array(
                     'url' => 'versions/'.$widget->getQueryOptions()['project'].'/'.$version['name'],
                     'title' => $title,
                     'issues' => $issues,
@@ -221,6 +221,13 @@ $app->get('/', function () use ($app) {
                         return $a;
                     }, 0)
                 );
+                    
+                if (isset($version['daysLeft'])) {
+                    $card['releaseDate'] = $version['releaseDate'];
+                    $card['daysLeft'] = $version['daysLeft'];
+                }
+                
+                $cards []= $card;
             }
             continue;
         }

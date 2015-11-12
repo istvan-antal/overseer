@@ -1,6 +1,17 @@
 <div class="ui card">
     <div class="content">
-        <div class="header">{% if url is defined %}<a href="{{ url }}">{{ title }}</a>{% else %}{{ title }}{% endif %}</div>
+        <div class="header">
+            {% if url is defined %}<a href="{{ url }}">{{ title }}</a>{% else %}{{ title }}{% endif %}
+            {% if releaseDate is defined %}
+            <div class="ui left pointing{% if daysLeft == 0 %} orange{% endif %} label">
+                {% if daysLeft == 0 %}
+                    today
+                {% else %}
+                    {{ daysLeft }} days left
+                {% endif %}
+            </div>
+        {% endif %}
+        </div>
         <div class="ui divided list">
             {% for item in issues %}
                 {% include 'issue.twig' %}
