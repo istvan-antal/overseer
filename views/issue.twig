@@ -9,7 +9,7 @@ set iconMap = {
     'New Feature': 'star',
     'Support Request': 'warning'
 }
-%}<div class="item">
+%}<div class="item{% if options.canHideResolved is defined and options.canHideResolved and item.resolved %} ux-issue-resolved{% endif %}">
     <div class="content">
         <a href="{{item.url}}" target="_blank">
             {% if iconMap[item.type] %}

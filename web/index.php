@@ -222,6 +222,8 @@ $app->get('/', function () use ($app) {
                     }, 0)
                 );
                     
+                $card['options']['canHideResolved'] = true;
+                    
                 if (isset($version['daysLeft'])) {
                     $card['releaseDate'] = $version['releaseDate'];
                     $card['daysLeft'] = $version['daysLeft'];
