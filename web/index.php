@@ -200,10 +200,6 @@ $app->get('/', function () use ($app) {
                     $title = $version['description'].' - '.$title;
                 }
                 
-                if (isset($version['releaseDate'])) {
-                    $title .= ' - '.$version['releaseDate'];
-                }
-                
                 $issues = $jira->getIssuesFixedForVersion($widget->getQueryOptions()['project'], $version['name']);
                 
                 $card = array(
