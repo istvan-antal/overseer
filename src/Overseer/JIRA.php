@@ -293,7 +293,7 @@ class JIRA {
         return array_map(function ($version) use ($now) {
             if (isset($version['releaseDate'])) {
                 $releaseDate = \DateTime::createFromFormat('Y-m-d', $version['releaseDate']);
-                $version['daysLeft'] = $now->diff($releaseDate)->format('%a');
+                $version['daysLeft'] = intval($now->diff($releaseDate)->format('%r%a'));
             }
             return $version;
         }, $versions);

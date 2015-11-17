@@ -4,10 +4,12 @@
     <h2 class="ui dividing header">
         {{ version.name }}
         {% if version.releaseDate is defined %}
-            <div class="ui left pointing{% if version.daysLeft == 0 %} orange{% endif %} label">
+            <div class="ui left pointing{% if version.daysLeft <= 0 %} red{% endif %} label">
                 {% if version.daysLeft == 0 %}
                     today
-                {% else %}
+                {% elseif version.daysLeft < 0 %}
+                    {{ version.daysLeft | abs }} days overdue
+                {% else  %}
                     {{ version.daysLeft }} days left
                 {% endif %}
             </div>

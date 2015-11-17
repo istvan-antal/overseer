@@ -8,11 +8,13 @@
         <div class="header">
             {% if url is defined %}<a href="{{ url }}">{{ title }}</a>{% else %}{{ title }}{% endif %}
             {% if releaseDate is defined %}
-            <div class="ui left pointing{% if daysLeft == 0 %} {% if issuesAreResolvedForCard %}green{% else %}orange{% endif %}{% endif %} label">
+            <div class="ui left pointing{% if daysLeft <= 0 %} {% if issuesAreResolvedForCard %}green{% else %}red{% endif %}{% endif %} label">
                 {% if daysLeft == 0 %}
                     {% if issuesAreResolvedForCard %}<i class="check circle outline icon"></i>{% endif %}
                     today
-                {% else %}
+                {% elseif daysLeft < 0 %}
+                    {{ daysLeft | abs }} days overdue
+                {% else  %}
                     {{ daysLeft }} days left
                 {% endif %}
             </div>
