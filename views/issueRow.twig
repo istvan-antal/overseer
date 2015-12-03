@@ -20,6 +20,10 @@ set iconMap = {
             {% endif %}
 
             {{item.summary}}
+            
+            {% for component in item.components %}
+                <span class="ui mini label">{{ component.name }}</span>
+            {% endfor %}
 
             {% if item.status != 'Open' and item.status != 'Closed' and item.status != 'Blocked' and item.status != 'Resolved' %}
                 {% if item.status == 'In Progress' %}
