@@ -14,10 +14,12 @@ th {
 
 .App {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .widget {
-    margin: 1rem;
+    flex-basis: 31%;
 }
 
 .done {
@@ -26,4 +28,8 @@ th {
 
 .blocked {
     background-color: red;
+}
+
+.progress {
+    background-color: orange;
 }

@@ -1,27 +1,17 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import './App.css';
 
-const sleep = async (timeout) => new Promise(resolve => {
-  setTimeout(timeout, resolve);
-})
+import { fetchJson } from './io';
 
-const fetchJson = async (url, retryCount = 5) => {
-  try {
-    return fetch(url).then(response => response.json());
-  } catch (e) {
-    if (!retryCount) {
-      throw e;
-    }
-    await sleep(1000);
-    return fetchJson(url, retryCount - 1);
-  }
-}
-
-const IssueRow = ({ widget, issue, baseUrl }) => {
+const IssueRow = ({ widget, issue, baseUrl }: any) => {
   let classes = '';
 
   if (widget.doneStates.includes(issue.fields.status.name)) {
     classes += 'done ';
+  }
+
+  if (widget.inProgressStates.includes(issue.fields.status.name)) {
+    classes += 'progress ';
   }
 
   if (widget.blockedStates.includes(issue.fields.status.name)) {
@@ -44,9 +34,18 @@ const IssueRow = ({ widget, issue, baseUrl }) => {
   );
 };
 
-class App extends Component {
+
+interface Props {
+}
+
+interface State {
+  baseUrl?: string;
+  widgets: any[];
+}
+
+class App extends React.Component<Props, State> {
   constructor() {
-    super();
+    super({});
 
     this.state = {
       widgets: [],
@@ -55,7 +54,7 @@ class App extends Component {
     (async () => {
       const data = await fetch('settings.json').then(response => response.json())
 
-      const widgets = await Promise.all(data.widgets.map(async (widget, key) => ({
+      const widgets = await Promise.all(data.widgets.map(async (widget: any, key: number) => ({
         ...widget,
         data: await fetchJson(`data/${key}.json`)
       })))
@@ -74,11 +73,11 @@ class App extends Component {
             <table>
               <thead>
                 <tr>
-                  <th colSpan="2">{widget.title}</th>
+                  <th colSpan={2}>{widget.title}</th>
                 </tr>
               </thead>
               <tbody>
-                {widget.data.issues.sort((a, b) => widget.doneStates.includes(a.fields.status.name) ? 1 : -1).map(issue => (
+                {(widget.data.issues || []).sort((a: any, b: any) => widget.doneStates.includes(a.fields.status.name) ? 1 : -1).map((issue: any) => (
                   <IssueRow widget={widget} issue={issue} baseUrl={this.state.baseUrl} key={issue.key} />
               ))}
               </tbody>
