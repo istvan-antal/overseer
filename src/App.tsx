@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 
-import { fetchJson } from './io';
+import { fetchJson, sleep } from './io';
 
 const IssueRow = ({ widget, issue, baseUrl }: any) => {
   let classes = '';
@@ -44,6 +44,7 @@ interface State {
 }
 
 class App extends React.Component<Props, State> {
+  private update: () => Promise<void>;
   constructor() {
     super({});
 
@@ -51,19 +52,26 @@ class App extends React.Component<Props, State> {
       widgets: [],
     };
 
-    (async () => {
-      const data = await fetch('settings.json').then(response => response.json())
+    this.update = async () => {
+      try {
+        const data = await fetchJson('settings.json');
 
-      const widgets = await Promise.all(data.widgets.map(async (widget: any, key: number) => ({
-        ...widget,
-        data: await fetchJson(`data/${key}.json`)
-      })))
+        const widgets = await Promise.all(data.widgets.map(async (widget: any, key: number) => ({
+          ...widget,
+          data: await fetchJson(`data/${key}.json`)
+        })))
 
-      this.setState({
-        baseUrl: data.url,
-        widgets,
-      });
-    })();
+        this.setState({
+          baseUrl: data.url,
+          widgets,
+        });
+      } finally {
+        await sleep(60000);
+        this.update();
+      }
+    };
+
+    this.update();
   }
   render() {
     return (

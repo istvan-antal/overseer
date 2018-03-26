@@ -1,10 +1,10 @@
-const sleep = async (timeout: number) => new Promise(resolve => {
-    setTimeout(timeout, resolve);
+export const sleep = async (timeout: number) => new Promise(resolve => {
+    setTimeout(resolve, timeout);
 });
 
 export const fetchJson = async (url: string, retryCount = 5): Promise<any> => {
     try {
-        return fetch(url).then(response => response.json());
+        return fetch(url, { credentials: 'same-origin' }).then(response => response.json());
     } catch (e) {
         if (!retryCount) {
             throw e;
