@@ -15,7 +15,7 @@ const update = () => {
             settings.auth,
             '-o',
             `public/data/${key}.json`,
-            `${settings.url}/rest/api/2/search/?maxResults=1000&jql=${encodeURIComponent(widget.jql)}`
+            `${settings.url}/rest/api/2/search/?maxResults=2000&jql=${encodeURIComponent(widget.jql)}`
         ],
         {
             stdio: 'inherit',

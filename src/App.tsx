@@ -22,6 +22,7 @@ const IssueRow = ({ widget, issue, baseUrl }: any) => {
     <tr className={classes}>
       <td>
         <a href={`${baseUrl}/browse/${issue.key}`} target="_blank">
+          <img width="15" height="15" src={issue.fields.priority.iconUrl} />
           {issue.fields.summary}
         </a>
       </td>
@@ -45,8 +46,8 @@ interface State {
 
 class App extends React.Component<Props, State> {
   private update: () => Promise<void>;
-  constructor() {
-    super({});
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       widgets: [],
@@ -60,6 +61,8 @@ class App extends React.Component<Props, State> {
           ...widget,
           data: await fetchJson(`data/${key}.json`)
         })))
+
+        console.log(widgets);
 
         this.setState({
           baseUrl: data.url,
@@ -76,7 +79,7 @@ class App extends React.Component<Props, State> {
   render() {
     return (
       <div className="App">
-        {this.state.widgets.map((widget, key) => (
+        {this.state.widgets.filter(widget => widget.data.issues && !!widget.data.issues.length).map((widget, key) => (
           <div className="widget" key={key}>
             <table>
               <thead>
