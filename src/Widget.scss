@@ -1,0 +1,60 @@
+$inProgresssColor: #445973;
+
+.Widget {
+    margin: 0.25rem;
+    padding: 0.5rem;
+    color: #FFF;
+    .WidgetTitle {
+        font-size: 1.3rem;
+    }
+    a, a:link, a:visited {
+        color: #FFF;
+        text-decoration: none;
+    }
+    background-color: #353848;
+    order: 2;
+    &.UNKNOWN {
+        order: 0;
+        color: #d0d7ff;
+        background-color: $inProgresssColor;
+        animation: loop 5s infinite;
+    }
+
+    
+    &.FAILURE {
+        order: 1;
+        background-color: red;
+    }
+    .WidgetStages {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        .WidgetStage {
+            padding: 0.5rem;
+            color: #FFF;
+            &.SUCCESS {
+                background-color: green;
+            }
+            &.UNKNOWN {
+                background-color: $inProgresssColor
+            }
+            &.FAILURE {
+                background-color: red;
+            }
+        }
+    }
+}
+
+@keyframes loop {
+    0% {
+        background-color: #353848;
+    }
+
+    50% {
+        background-color: $inProgresssColor;
+    }
+
+    100% {
+        background-color: #353848;
+    }
+}
