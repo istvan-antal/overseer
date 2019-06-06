@@ -7,8 +7,9 @@ import { connect } from 'react-redux';
 import { State } from './store';
 import { Dispatch, bindActionCreators, AnyAction } from 'redux';
 import { WidgetsAction, receiveWidgetsActions } from './store/actions/widgets';
-type Actions = WidgetsAction | AnyAction;
-const ConnectedApp = connect((state: State) => state, (dispatch: Dispatch<Actions>) => bindActionCreators({
+
+const ConnectedApp = connect(
+    (state: State) => state, (dispatch: Dispatch<WidgetsAction | AnyAction>) => bindActionCreators({
 }, dispatch))(App);
 
 // tslint:disable-next-line:no-any

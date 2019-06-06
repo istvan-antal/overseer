@@ -71,7 +71,7 @@
         "@types/react-dom": "^16.8.0",
         "@types/react-redux": "^7.0.1",
         "@types/ws": "^6.0.1",
-        "charge-sdk": "^0.4.1",
+        "charge-sdk": "^0.6.0",
         "node-fetch": "^2.3.0",
         "react": "^16.8.1",
         "react-dom": "^16.8.1",
@@ -82,5 +82,25 @@
     "optionalDependencies": {
         "bufferutil": "^4.0.1",
         "utf-8-validate": "^5.0.2"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env",
+            "@babel/preset-react",
+            "@babel/preset-typescript"
+        ],
+        "plugins": [
+            "@babel/plugin-proposal-object-rest-spread",
+            "@babel/plugin-proposal-export-default-from",
+            "@babel/plugin-transform-react-jsx",
+            [
+                "@babel/plugin-proposal-class-properties",
+                {
+                    "loose": true
+                }
+            ],
+            "@babel/plugin-transform-modules-commonjs",
+            "@babel/plugin-syntax-dynamic-import"
+        ]
     }
 }
