@@ -2,11 +2,16 @@
     "name": "overseer",
     "version": "1.0.0",
     "description": "",
+    
     "main": "./src/index.tsx",
     "scripts": {
         "test": "charge-sdk test",
         "start": "ts-node ./src/main.ts",
         "build": "charge-sdk build"
+    },
+    "engines": {
+        "node": "12.4.0",
+        "npm": "6.9.0"
     },
     "keywords": [],
     "author": "",
