@@ -7,15 +7,27 @@ import { connect } from 'react-redux';
 import { State } from './store';
 import { Dispatch, bindActionCreators, AnyAction } from 'redux';
 import { WidgetsAction, receiveWidgetsActions } from './store/actions/widgets';
+import { patch } from 'jsondiffpatch';
 
 const ConnectedApp = connect(
     (state: State) => state, (dispatch: Dispatch<WidgetsAction | AnyAction>) => bindActionCreators({
 }, dispatch))(App);
 
 // tslint:disable-next-line:no-any
-const update = (state: { widgets: any[] }) => {
-    console.log('New State', state);
-    store.dispatch(receiveWidgetsActions.receive(state.widgets));
+let dashboard: { widgets: any[] };
+// tslint:disable-next-line:no-any
+const update = (state: { type: 'set' | 'patch'; data: any }) => {
+    switch (state.type) {
+    case 'set':
+        dashboard = state.data;
+        break;
+    case 'patch':
+        patch(dashboard, state.data);
+        break;
+    default:
+        throw new Error(`Unhandled type ${state.type}`);
+    }
+    store.dispatch(receiveWidgetsActions.receive(dashboard.widgets.slice()));
 };
 
 const connectToWs = () => {
