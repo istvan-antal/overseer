@@ -1,10 +1,20 @@
-import { run } from 'charge-sdk';
-import { broadcastState } from './connectionManager';
+import { Server } from 'ws';
+import { diff } from 'jsondiffpatch';
+import http from 'http';
+import https from 'https';
 import fetch from 'node-fetch';
 const config = require('../config.json');
 
+const connections: Array<{
+    send(message: string): void;
+}> = [];
+
+let lastState: {};
+
+const clone = (obj: {}) => JSON.parse(JSON.stringify(obj));
+
 const REFRESH_INTERVAL = 5000;
-const state: {
+const currentState: {
     // tslint:disable-next-line:no-any
     widgets: any[];
 } = {
@@ -48,7 +58,7 @@ const addBuildBranch = async (build: Build) => {
         `blue/rest/organizations/jenkins/pipelines/${build.path}/latestRun`);
     const nodes = await fetchData(
         `${data._links.self.href}/nodes/`);
-    state.widgets.push({
+    currentState.widgets.push({
         ...data,
         baseUrl: BASE_URL,
         nickname: build.nickname,
@@ -57,31 +67,74 @@ const addBuildBranch = async (build: Build) => {
     });
 };
 
-const update = () => {
-    (async () => {
-        state.widgets = [];
-        for (const build of builds) {
-            if (build.type === 'multibranch') {
-                const data = await fetchData(
-                    `blue/rest/organizations/jenkins/pipelines/${build.path}`);
-                for (const branch of data.branchNames) {
-                    await addBuildBranch({
-                        path: `${build.path}/branches/${branch.replace(/%2F/g, '%252F')}`,
-                        nickname: `${build.nickname} - ${branch.replace(/%2F/g, '/')}`,
-                    });
-                }
-                continue;
-            }
-            await addBuildBranch(build);
-        }
-        broadcastState(state);
-        setTimeout(update, REFRESH_INTERVAL);
-    })().catch(error => {
-        console.error(error);
-        // tslint:disable-next-line:no-magic-numbers
-        setTimeout(update, REFRESH_INTERVAL * 5);
+export const setup = (server?: http.Server | https.Server) => {
+    const wss = new Server({
+        server,
+        path: '/api/ws',
     });
-};
 
-update();
-run();
+    wss.on('connection', ws => {
+        console.log('New connection');
+        ws.send(JSON.stringify({
+            type: 'set',
+            data: lastState,
+        }));
+        connections.push(ws);
+
+        ws.on('close', () => {
+            connections.splice(connections.indexOf(ws), 1);
+        });
+    });
+
+    const broadcastState = (state: {}) => {
+        const newState = clone(state);
+        if (lastState) {
+            const patch = diff(lastState, newState);
+            if (patch) {
+                console.log('patch', JSON.stringify(patch));
+                connections.forEach(ws => {
+                    ws.send(JSON.stringify({
+                        type: 'patch',
+                        data: patch,
+                    }));
+                });
+            }
+        } else {
+            connections.forEach(ws => {
+                ws.send(JSON.stringify({
+                    type: 'set',
+                    data: newState,
+                }));
+            });
+        }
+        lastState = newState;
+    };
+
+    const update = () => {
+        (async () => {
+            currentState.widgets = [];
+            for (const build of builds) {
+                if (build.type === 'multibranch') {
+                    const data = await fetchData(
+                        `blue/rest/organizations/jenkins/pipelines/${build.path}`);
+                    for (const branch of data.branchNames) {
+                        await addBuildBranch({
+                            path: `${build.path}/branches/${branch.replace(/%2F/g, '%252F')}`,
+                            nickname: `${build.nickname} - ${branch.replace(/%2F/g, '/')}`,
+                        });
+                    }
+                    continue;
+                }
+                await addBuildBranch(build);
+            }
+            broadcastState(currentState);
+            setTimeout(update, REFRESH_INTERVAL);
+        })().catch(error => {
+            console.error(error);
+            // tslint:disable-next-line:no-magic-numbers
+            setTimeout(update, REFRESH_INTERVAL * 5);
+        });
+    };
+
+    update();
+};

@@ -31,7 +31,7 @@ const update = (state: { type: 'set' | 'patch'; data: any }) => {
 };
 
 const connectToWs = () => {
-    const ws = new WebSocket('ws://localhost:18080/');
+    const ws = new WebSocket('ws://localhost:6001/api/ws');
 
     ws.onopen = e => {
         console.log('Connected');
