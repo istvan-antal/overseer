@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { State } from './store';
 import { Dispatch, bindActionCreators, AnyAction } from 'redux';
 import { WidgetsAction, receiveWidgetsActions } from './store/actions/widgets';
-import { patch } from 'jsondiffpatch';
+import gql from 'graphql-tag';
+import { client } from './client';
 
 const ConnectedApp = connect(
     (state: State) => state, (dispatch: Dispatch<WidgetsAction | AnyAction>) => bindActionCreators({
@@ -16,6 +17,7 @@ const ConnectedApp = connect(
 // tslint:disable-next-line:no-any
 let dashboard: { widgets: any[] };
 // tslint:disable-next-line:no-any
+/*
 const update = (state: { type: 'set' | 'patch'; data: any }) => {
     switch (state.type) {
     case 'set':
@@ -28,27 +30,19 @@ const update = (state: { type: 'set' | 'patch'; data: any }) => {
         throw new Error(`Unhandled type ${state.type}`);
     }
     store.dispatch(receiveWidgetsActions.receive(dashboard.widgets.slice()));
-};
+};*/
 
-const connectToWs = () => {
-    const ws = new WebSocket('ws://localhost:6001/api/ws');
+const liveQuery = client.subscribe({
+    query: gql`
+    {
+        widgets
+    }
+    `
+});
 
-    ws.onopen = e => {
-        console.log('Connected');
-    };
-
-    ws.onclose = e => {
-        console.log('Disconnected');
-        // tslint:disable-next-line:no-magic-numbers
-        setTimeout(connectToWs, 30000);
-    };
-
-    ws.onmessage = e => {
-        update(JSON.parse(e.data));
-    };
-};
-
-connectToWs();
+liveQuery.subscribe(({ data: { widgets }}) => {
+    store.dispatch(receiveWidgetsActions.receive(widgets.slice()));
+})
 
 render(
     <Provider store={store}>

@@ -67,15 +67,18 @@ const addBuildBranch = async (build: Build) => {
     });
 };
 
-export const setup = (server?: http.Server | https.Server) => {
+export const setup = () => {
     const wss = new Server({
-        server,
-        path: '/api/ws',
+        port: 6002,
     });
 
     wss.on('connection', ws => {
+        ws.on('message', message => {
+            console.log('message', message);
+        });
         console.log('New connection');
         ws.send(JSON.stringify({
+            id: 1,
             type: 'set',
             data: lastState,
         }));
@@ -94,6 +97,7 @@ export const setup = (server?: http.Server | https.Server) => {
                 console.log('patch', JSON.stringify(patch));
                 connections.forEach(ws => {
                     ws.send(JSON.stringify({
+                        id: 1,
                         type: 'patch',
                         data: patch,
                     }));
@@ -102,6 +106,7 @@ export const setup = (server?: http.Server | https.Server) => {
         } else {
             connections.forEach(ws => {
                 ws.send(JSON.stringify({
+                    id: 1,
                     type: 'set',
                     data: newState,
                 }));
