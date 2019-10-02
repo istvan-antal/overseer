@@ -1,16 +1,22 @@
-import * as React from 'react';
-import { State } from './store';
+import React from 'react';
 import Widget from './Widget';
+import { useSubscription } from '@apollo/react-hooks';
 import './App.scss';
+import gql from 'graphql-tag';
 
-export default class App extends React.Component<State> {
-    render() {
-        return (
-            <div className="Widgets">
-                {this.props.widgets.map(widget => (
-                    <Widget key={widget._links.self.href} widget={widget} />
-                ))}
-            </div>
-        );
-    }
-}
+const App = () => {
+    const { data: { widgets = [] } = {} } = useSubscription<any>(gql`
+        {
+            widgets
+        }
+    `);
+    return (
+        <div className="Widgets">
+            {widgets.map((widget: any) => (
+                <Widget key={widget._links.self.href} widget={widget} />
+            ))}
+        </div>
+    );
+};
+
+export default App;

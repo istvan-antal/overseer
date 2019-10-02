@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './store';
 import { connect } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
 import { State } from './store';
 import { Dispatch, bindActionCreators, AnyAction } from 'redux';
 import { WidgetsAction, receiveWidgetsActions } from './store/actions/widgets';
@@ -14,8 +16,6 @@ const ConnectedApp = connect(
     (state: State) => state, (dispatch: Dispatch<WidgetsAction | AnyAction>) => bindActionCreators({
 }, dispatch))(App);
 
-// tslint:disable-next-line:no-any
-let dashboard: { widgets: any[] };
 // tslint:disable-next-line:no-any
 /*
 const update = (state: { type: 'set' | 'patch'; data: any }) => {
@@ -32,6 +32,7 @@ const update = (state: { type: 'set' | 'patch'; data: any }) => {
     store.dispatch(receiveWidgetsActions.receive(dashboard.widgets.slice()));
 };*/
 
+/*
 const liveQuery = client.subscribe({
     query: gql`
     {
@@ -42,11 +43,16 @@ const liveQuery = client.subscribe({
 
 liveQuery.subscribe(({ data: { widgets }}) => {
     store.dispatch(receiveWidgetsActions.receive(widgets.slice()));
-})
+})*/
 
 render(
-    <Provider store={store}>
-        <ConnectedApp />
-    </Provider>,
+    <ApolloHooksProvider client={client}>
+        <ApolloProvider client={client}>
+            <Provider store={store}>
+                <ConnectedApp />
+            </Provider>
+        </ApolloProvider>
+    </ApolloHooksProvider>
+    ,
     document.getElementById('app'),
 );

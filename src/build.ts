@@ -1,14 +1,11 @@
-
-import http from 'http';
-import https from 'https';
-import { setup } from './main';
+import { run } from './main';
 
 module.exports.default = (config: any) => ({
     ...config,
     devServer: {
         ...config.devServer,
-        after(app: http.Server | https.Server) {
-            setup(app);
+        after(app: any) {
+            run();
         },
     },
 });

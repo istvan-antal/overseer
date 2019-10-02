@@ -67,7 +67,7 @@ const addBuildBranch = async (build: Build) => {
     });
 };
 
-export const setup = () => {
+export const run = () => {
     const wss = new Server({
         port: 6002,
     });
