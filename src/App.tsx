@@ -5,11 +5,24 @@ import './App.scss';
 import gql from 'graphql-tag';
 
 const App = () => {
+    const { data: { connection: { connected } = { connected: false, } } = {
+    } } = useSubscription<any>(gql`
+        {
+            connection {
+                connected
+            }
+        }
+    `);
     const { data: { widgets = [] } = {} } = useSubscription<any>(gql`
         {
             widgets
         }
     `);
+
+    if (!connected) {
+        return <div>Offline</div>;
+    }
+
     return (
         <div className="Widgets">
             {widgets.map((widget: any) => (
