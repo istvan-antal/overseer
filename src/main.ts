@@ -31,13 +31,22 @@ interface Build {
     path: string;
     nickname: string;
     type?: 'multibranch';
+    baseUrl?: string;
+    username?: string;
+    apiToken?: string;
 }
 
-const fetchData = async (path: string) => (await fetch(
-    `${BASE_URL}${path}`,
+const fetchData = async (
+    path: string,
+    server: { 
+        baseUrl: string;
+        username: string;
+        apiToken: string;
+     }) => (await fetch(
+         `${server.baseUrl}${path}`,
     {
         headers: {
-            Authorization: 'Basic ' + Buffer.from(`${username}:${API_TOKEN}`).toString('base64'),
+            Authorization: 'Basic ' + Buffer.from(`${server.username}:${server.apiToken}`).toString('base64'),
         },
     })).json();
 
@@ -55,12 +64,24 @@ const addBuildBranch = async (build: Build) => {
         }
     }*/
     const data = await fetchData(
-        `blue/rest/organizations/jenkins/pipelines/${build.path}/latestRun`);
+        `blue/rest/organizations/jenkins/pipelines/${build.path}/latestRun`,
+        {
+            baseUrl: build.baseUrl || BASE_URL,
+            username: build.username || username,
+            apiToken: build.apiToken || API_TOKEN,
+        });
+
     const nodes = await fetchData(
-        `${data._links.self.href}/nodes/`);
+        `${data._links.self.href}/nodes/`,
+        {
+            baseUrl: build.baseUrl || BASE_URL,
+            username: build.username || username,
+            apiToken: build.apiToken || API_TOKEN,
+        }
+    );
     currentState.widgets.push({
         ...data,
-        baseUrl: BASE_URL,
+        baseUrl: build.baseUrl || BASE_URL,
         nickname: build.nickname,
         nodes,
         // workflow,
@@ -121,11 +142,20 @@ export const run = () => {
             for (const build of builds) {
                 if (build.type === 'multibranch') {
                     const data = await fetchData(
-                        `blue/rest/organizations/jenkins/pipelines/${build.path}`);
+                        `blue/rest/organizations/jenkins/pipelines/${build.path}`,
+                        {
+                            baseUrl: build.baseUrl || BASE_URL,
+                            username: build.username || username,
+                            apiToken: build.apiToken || API_TOKEN,
+                        }
+                    );
                     for (const branch of data.branchNames) {
                         await addBuildBranch({
                             path: `${build.path}/branches/${branch.replace(/%2F/g, '%252F')}`,
                             nickname: `${build.nickname} - ${branch.replace(/%2F/g, '/')}`,
+                            baseUrl: build.baseUrl || BASE_URL,
+                            username: build.username || username,
+                            apiToken: build.apiToken || API_TOKEN,
                         });
                     }
                     continue;
