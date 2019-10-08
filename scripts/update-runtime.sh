@@ -1,4 +1,6 @@
 #!/bin/bash
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+cd ..
 NODE_VERSION=$(python -c "import json; data = json.load(open('package.json')); print(data['engines']['node'])")
 NPM_VERSION=$(python -c "import json; data = json.load(open('package.json')); print(data['engines']['npm'])")
 
