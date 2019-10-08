@@ -4,6 +4,7 @@ import { ApolloLink, Observable, Operation } from 'apollo-link';
 import { patch } from 'jsondiffpatch';
 import { Observer } from 'apollo-client/util/Observable';
 import { OperationDefinitionNode } from 'graphql';
+import config from '../config.json';
 
 let ws: WebSocket;
 let connected = false;
@@ -22,7 +23,7 @@ const updateConnectionObservers = () => {
 };
 
 const connectToWs = () => {
-    ws = new WebSocket('ws://localhost:6002');
+    ws = new WebSocket(config.ws || 'ws://localhost:6002');
 
     ws.onopen = e => {
         console.log('Connected');
