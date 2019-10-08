@@ -1,8 +1,8 @@
 #!/bin/bash
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
-NODE_VERSION=$(python -c "import json; data = json.load(open('package.json')); print(data['engines']['node'])")
-NPM_VERSION=$(python -c "import json; data = json.load(open('package.json')); print(data['engines']['npm'])")
+NODE_VERSION=$(python3 -c "import json; data = json.load(open('package.json')); print(data['engines']['node'])")
+NPM_VERSION=$(python3 -c "import json; data = json.load(open('package.json')); print(data['engines']['npm'])")
 
 PLATFORM="linux-x64"
 
