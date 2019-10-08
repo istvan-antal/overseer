@@ -93,7 +93,12 @@ export const run = () => {
         port: 6002,
     });
 
+    wss.on('error', error => {
+        console.error(error);
+    })
+
     wss.on('connection', ws => {
+        console.log('new connection');
         ws.on('message', message => {
             console.log('message', message);
         });
