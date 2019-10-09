@@ -25,8 +25,8 @@ const App = () => {
 
     return (
         <div className="Widgets">
-            {widgets.map((widget: any) => (
-                <Widget key={widget._links.self.href} widget={widget} />
+            {widgets.map((widget: any, index: number) => (
+                <Widget key={index} widget={widget} />
             ))}
         </div>
     );

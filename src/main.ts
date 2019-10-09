@@ -21,20 +21,33 @@ const currentState: {
     widgets: [],
 };
 
-const BASE_URL = config.baseUrl;
-const API_TOKEN = config.apiToken;
-const username = config.username;
-
-const builds = config.builds;
+const widgets = config.widgets;
 
 interface Build {
     path: string;
-    nickname: string;
-    type?: 'multibranch';
-    baseUrl?: string;
-    username?: string;
-    apiToken?: string;
+    name: string;
+    type: 'multibranch' | 'multibranchBuildFolder' | 'build';
+    baseUrl: string;
+    username: string;
+    apiToken: string;
 }
+
+interface JiraIssues {
+    name: string;
+    type: 'jiraIssues';
+    baseUrl: string;
+    username: string;
+    apiToken: string;
+    jql: string;
+}
+
+interface FolderWidget {
+    name: string;
+    type: 'folder';
+    widgets: Build[];
+}
+
+type Widget = FolderWidget | Build | JiraIssues;
 
 const fetchData = async (
     path: string,
@@ -66,23 +79,24 @@ const addBuildBranch = async (build: Build) => {
     const data = await fetchData(
         `blue/rest/organizations/jenkins/pipelines/${build.path}/latestRun`,
         {
-            baseUrl: build.baseUrl || BASE_URL,
-            username: build.username || username,
-            apiToken: build.apiToken || API_TOKEN,
+            baseUrl: build.baseUrl,
+            username: build.username,
+            apiToken: build.apiToken,
         });
 
     const nodes = await fetchData(
         `${data._links.self.href}/nodes/`,
         {
-            baseUrl: build.baseUrl || BASE_URL,
-            username: build.username || username,
-            apiToken: build.apiToken || API_TOKEN,
+            baseUrl: build.baseUrl,
+            username: build.username,
+            apiToken: build.apiToken,
         }
     );
-    currentState.widgets.push({
+    return ({
+        type: 'build',
         ...data,
-        baseUrl: build.baseUrl || BASE_URL,
-        nickname: build.nickname,
+        baseUrl: build.baseUrl,
+        name: build.name,
         nodes,
         // workflow,
     });
@@ -141,56 +155,84 @@ export const run = () => {
         lastState = newState;
     };
 
-    const update = () => {
-        (async () => {
-            currentState.widgets = [];
-            for (const build of builds) {
-                switch (build.type) {
-                case 'folder': {
-                    const folderData = await fetchData(`blue/rest/organizations/jenkins/pipelines/${build.path}`, {
-                        baseUrl: build.baseUrl || BASE_URL,
-                        username: build.username || username,
-                        apiToken: build.apiToken || API_TOKEN,
+    const processWidgets = async (widgets: Widget[]) => {
+        const results: Array<{}> = [];
+        for (const widget of widgets) {
+            switch (widget.type) {
+                case 'jiraIssues':
+                    results.push({
+                        type: 'jiraIssues',
+                        name: widget.name,
+                        issues: (await fetchData(`rest/api/2/search?jql=${encodeURIComponent(widget.jql)}`, {
+                            baseUrl: widget.baseUrl,
+                            username: widget.username,
+                            apiToken: widget.apiToken,
+                        })).issues,
+                    });
+                    break;
+                case 'folder':
+                    results.push({
+                        type: 'folder',
+                        name: widget.name,
+                        widgets: await processWidgets(widget.widgets),
+                    });
+                    break;
+                case 'multibranchBuildFolder': {
+                    const folderData = await fetchData(`blue/rest/organizations/jenkins/pipelines/${widget.path}`, {
+                        baseUrl: widget.baseUrl,
+                        username: widget.username,
+                        apiToken: widget.apiToken,
                     });
                     for (const reposiory of folderData.pipelineFolderNames) {
-                        const data = await fetchData(`blue/rest/organizations/jenkins/pipelines/${build.path}/${reposiory}`, {
-                            baseUrl: build.baseUrl || BASE_URL,
-                            username: build.username || username,
-                            apiToken: build.apiToken || API_TOKEN,
+                        const data = await fetchData(`blue/rest/organizations/jenkins/pipelines/${widget.path}/${reposiory}`, {
+                            baseUrl: widget.baseUrl,
+                            username: widget.username,
+                            apiToken: widget.apiToken,
                         });
                         for (const branch of data.branchNames) {
-                            await addBuildBranch({
-                                path: `${build.path}/${reposiory}/branches/${branch.replace(/%2F/g, '%252F')}`,
-                                nickname: `${build.nickname} : ${reposiory} - ${branch.replace(/%2F/g, '/')}`,
-                                baseUrl: build.baseUrl || BASE_URL,
-                                username: build.username || username,
-                                apiToken: build.apiToken || API_TOKEN,
-                            });
+                            results.push(await addBuildBranch({
+                                type: 'build',
+                                path: `${widget.path}/${reposiory}/branches/${branch.replace(/%2F/g, '%252F')}`,
+                                name: `${widget.name} : ${reposiory} - ${branch.replace(/%2F/g, '/')}`,
+                                baseUrl: widget.baseUrl,
+                                username: widget.username,
+                                apiToken: widget.apiToken,
+                            }));
                         }
                     }
                 }
                     break;
                 case 'multibranch': {
-                    const data = await fetchData(`blue/rest/organizations/jenkins/pipelines/${build.path}`, {
-                        baseUrl: build.baseUrl || BASE_URL,
-                        username: build.username || username,
-                        apiToken: build.apiToken || API_TOKEN,
+                    const data = await fetchData(`blue/rest/organizations/jenkins/pipelines/${widget.path}`, {
+                        baseUrl: widget.baseUrl,
+                        username: widget.username,
+                        apiToken: widget.apiToken,
                     });
                     for (const branch of data.branchNames) {
-                        await addBuildBranch({
-                            path: `${build.path}/branches/${branch.replace(/%2F/g, '%252F')}`,
-                            nickname: `${build.nickname} - ${branch.replace(/%2F/g, '/')}`,
-                            baseUrl: build.baseUrl || BASE_URL,
-                            username: build.username || username,
-                            apiToken: build.apiToken || API_TOKEN,
-                        });
+                        results.push(await addBuildBranch({
+                            type: 'build',
+                            path: `${widget.path}/branches/${branch.replace(/%2F/g, '%252F')}`,
+                            name: `${widget.name} - ${branch.replace(/%2F/g, '/')}`,
+                            baseUrl: widget.baseUrl,
+                            username: widget.username,
+                            apiToken: widget.apiToken,
+                        }));
                     }
                 }
                     break;
+                case 'build':
+                    results.push(await addBuildBranch(widget));
+                    break;
                 default:
-                    await addBuildBranch(build);
-                }                
+                    throw new Error('Invalid type');
             }
+        }
+        return results;
+    };
+
+    const update = () => {
+        (async () => {
+            currentState.widgets = await processWidgets(widgets);
             broadcastState(currentState);
             setTimeout(update, REFRESH_INTERVAL);
         })().catch(error => {

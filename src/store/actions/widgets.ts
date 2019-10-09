@@ -1,7 +1,7 @@
 import { createAction, ActionsUnion } from '.';
 
 export interface Widget {
-    nickname: string;
+    name: string;
     id: string;
     baseUrl: string;
     _links: {
